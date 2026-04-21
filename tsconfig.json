@@ -4,23 +4,24 @@
     // Language & Environment
     // Defines JavaScript version and runtime environment
     // ======================================================================
-    "target": "ES2017",
+    "target": "ES2025",
     "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "moduleResolution": "bundler",
-    "isolatedModules": true,
+    // ======================================================================
+    // Module System (TS 6.0+)
+    // Enforces modern module patterns aligned with TS 6.0 defaults
+    // ======================================================================
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     // ======================================================================
     // Type Safety - Foundation
     // Core type checking settings for a robust codebase
     // ======================================================================
     "strict": true,
-    "alwaysStrict": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
     // ======================================================================
     // Type Safety - Advanced
-    // Additional checks for higher code quality
+    // Additional checks beyond strict for higher code quality
     // ======================================================================
     "noUncheckedIndexedAccess": true,
     "noImplicitReturns": true,
@@ -30,23 +31,19 @@
     "noUncheckedSideEffectImports": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "useUnknownInCatchVariables": true,
     "noImplicitOverride": true,
     // ======================================================================
     // Interoperability
     // Settings for working with different file types and modules
     // ======================================================================
-    "allowJs": true,
-    "checkJs": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     // ======================================================================
     // Build & Performance
     // Settings that affect compilation output and build performance
     // ======================================================================
+    "types": ["node"],
     "skipLibCheck": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
     "forceConsistentCasingInFileNames": true,
     // ======================================================================
     // Project Structure
@@ -60,22 +57,20 @@
     // Next.js Project Configuration
     // Controls settings specific to Next.js framework
     // ======================================================================
-    "jsx": "react-jsx", // Uses the React automatic runtime
-    "incremental": true, // Enable faster incremental builds
-    "noEmit": true, // Skip emitting files (Next.js handles this)
+    "jsx": "react-jsx",
+    "incremental": true,
+    "noEmit": true,
     "plugins": [
       {
         "name": "next"
       }
-    ] // Enable Next.js TypeScript plugin
+    ]
   },
-  // Files to include/exclude from the project
-  "exclude": ["node_modules", "**/*.spec.ts", "**/*.e2e.ts"],
+  "exclude": ["node_modules"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".storybook/**/*.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
