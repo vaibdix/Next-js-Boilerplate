@@ -7,6 +7,14 @@ const config: KnipConfig = {
     'src/types/I18n.ts',
     'src/libs/Logger.ts',
     'src/components/ui/**',
+    'src/components/header.tsx',
+    'src/components/hero.tsx',
+    'src/components/logo-cloud.tsx',
+    'src/components/logo.tsx',
+    'src/components/logos-section.tsx',
+    'src/components/mobile-nav.tsx',
+    'src/components/nav-links.ts',
+    'src/hooks/use-scroll.ts',
   ],
   // Dependencies to ignore during analysis
   ignoreDependencies: [

@@ -1,6 +1,8 @@
 import { defineConfig } from 'oxfmt';
+import ultracite from 'ultracite/oxfmt';
 
 export default defineConfig({
+  extends: [ultracite],
   arrowParens: 'always',
   bracketSameLine: false,
   bracketSpacing: true,
