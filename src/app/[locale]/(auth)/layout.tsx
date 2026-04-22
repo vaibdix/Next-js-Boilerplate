@@ -10,6 +10,7 @@ export default async function AuthLayout(props: {
   const { locale } = await props.params;
   setRequestLocale(locale);
 
+  // oxlint-disable-next-line typescript/no-unsafe-assignment -- type cascades from @clerk/shared/types
   const clerkLocale =
     ClerkLocalizations.supportedLocales[locale] ??
     ClerkLocalizations.defaultLocale;
@@ -30,6 +31,7 @@ export default async function AuthLayout(props: {
       appearance={{
         cssLayerName: 'clerk', // Ensure Clerk is compatible with Tailwind CSS v4
       }}
+      // oxlint-disable-next-line typescript/no-unsafe-assignment
       localization={clerkLocale}
       signInUrl={signInUrl}
       signUpUrl={signUpUrl}

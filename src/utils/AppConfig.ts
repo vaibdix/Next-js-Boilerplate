@@ -1,4 +1,5 @@
 import { enUS, frFR } from '@clerk/localizations';
+// @ts-expect-error -- @clerk/shared/types is resolved internally by @clerk/nextjs
 import type { LocalizationResource } from '@clerk/shared/types';
 import type { LocalePrefixMode } from 'next-intl/routing';
 
