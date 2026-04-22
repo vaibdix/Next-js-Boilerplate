@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Sponsors } from '@/components/Sponsors';
+import { generatePageMetadata } from '@/utils/Metadata';
 
 type IndexPageProps = {
   params: Promise<{ locale: string }>;
@@ -10,15 +10,8 @@ export async function generateMetadata(
   props: IndexPageProps
 ): Promise<Metadata> {
   const { locale } = await props.params;
-  const t = await getTranslations({
-    locale,
-    namespace: 'Index',
-  });
 
-  return {
-    title: t('meta_title'),
-    description: t('meta_description'),
-  };
+  return generatePageMetadata({ locale, namespace: 'Index', path: '/' });
 }
 
 export default async function Index(props: IndexPageProps) {
@@ -128,13 +121,6 @@ export default async function Index(props: IndexPageProps) {
           generation)
         </li>
       </ul>
-      <p className="text-base">
-        Our sponsors&apos; exceptional support has made this project possible.
-        Their services integrate seamlessly with the boilerplate, and we
-        recommend trying them out.
-      </p>
-      <h2 className="mt-5 text-2xl font-bold">{t('sponsors_title')}</h2>
-      <Sponsors />
     </>
   );
 }

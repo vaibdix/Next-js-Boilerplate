@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
 import { Link } from '@/libs/I18nNavigation';
 import sentryLogo from '@/public/assets/images/sentry-dark.png';
+import { generatePageMetadata } from '@/utils/Metadata';
 
 type PortfolioPageProps = {
   params: Promise<{ locale: string }>;
@@ -12,15 +13,12 @@ export async function generateMetadata(
   props: PortfolioPageProps
 ): Promise<Metadata> {
   const { locale } = await props.params;
-  const t = await getTranslations({
+
+  return generatePageMetadata({
     locale,
     namespace: 'Portfolio',
+    path: '/portfolio',
   });
-
-  return {
-    title: t('meta_title'),
-    description: t('meta_description'),
-  };
 }
 
 export default async function Portfolio(props: PortfolioPageProps) {

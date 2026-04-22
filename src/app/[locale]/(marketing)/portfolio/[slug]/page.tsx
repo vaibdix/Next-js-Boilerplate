@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
 import { routing } from '@/libs/I18nRouting';
 import codeRabbitLogo from '@/public/assets/images/coderabbit-logo-light.svg';
+import { generatePageMetadata } from '@/utils/Metadata';
 
 type PortfolioDetailPageProps = {
   params: Promise<{ slug: string; locale: string }>;
@@ -21,15 +22,13 @@ export async function generateMetadata(
   props: PortfolioDetailPageProps
 ): Promise<Metadata> {
   const { locale, slug } = await props.params;
-  const t = await getTranslations({
+
+  return generatePageMetadata({
     locale,
     namespace: 'PortfolioSlug',
+    path: `/portfolio/${slug}`,
+    params: { slug },
   });
-
-  return {
-    title: t('meta_title', { slug }),
-    description: t('meta_description', { slug }),
-  };
 }
 
 export default async function PortfolioDetail(props: PortfolioDetailPageProps) {
@@ -58,6 +57,7 @@ export default async function PortfolioDetail(props: PortfolioDetailPageProps) {
       <a href="https://www.coderabbit.ai?utm_source=next_js_starter&utm_medium=github&utm_campaign=next_js_starter_oss_2025">
         <Image
           className="mx-auto mt-2"
+          // oxlint-disable-next-line typescript/no-unsafe-assignment
           src={codeRabbitLogo}
           alt="CodeRabbit"
           width={130}

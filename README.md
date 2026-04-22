@@ -1,16 +1,5 @@
 # Boilerplate and Starter for Next.js 16+, Tailwind CSS 4, and TypeScript.
 
-<p align="center">
-  <a href="https://demo.nextjs-boilerplate.com">
-    <img
-      src="public/assets/images/nextjs-starter-banner.png?raw=true"
-      alt="Next js starter banner"
-      style="max-width: 100%; height: auto;"
-    />
-  </a>
-</p>
-
-🚀
 ### Features
 
 Developer experience first, extremely flexible code structure and only keep what you need:
@@ -77,31 +66,7 @@ Optional features (easy to add):
 
 ### Requirements
 
-- Node.js 22+ and npm
-
-### Getting started
-
-Run the following command on your local environment:
-
-```shell
-git clone --depth=1 https://github.com/ixartz/Next-js-Boilerplate.git my-project-name
-cd my-project-name
-npm install
-```
-
-For your information, all dependencies are updated every month.
-
-Then, you can run the project locally in development mode with live reload by executing:
-
-```shell
-npm run dev
-```
-
-Open http://localhost:3000 with your favorite browser to see your project. For your information, the project is already pre-configured with a local database using PGlite. No extra setup is required to run the project locally.
-
-Need advanced features? Multi-tenancy & Teams, Roles & Permissions, Shadcn UI, End-to-End Typesafety with oRPC, Stripe Payment, Light / Dark mode. Try [Next.js Boilerplate Pro](https://nextjs-boilerplate.com/pro-saas-starter-kit).
-
-Or, need a Self-hosted auth stack (Better Auth)? Try [Next.js Boilerplate Max](https://nextjs-boilerplate.com/nextjs-multi-tenant-saas-boilerplate)
+- Node.js 24+ and pnpm
 
 ### Set up authentication
 
@@ -113,22 +78,6 @@ CLERK_SECRET_KEY=your_clerk_secret_key
 ```
 
 You now have a fully functional authentication system with Next.js, including features such as sign up, sign in, sign out, forgot password, reset password, update profile, update password, update email, delete account, and more.
-
-### Set up remote database
-
-The project uses DrizzleORM, a type-safe ORM that is compatible with PostgreSQL, SQLite, and MySQL databases. By default, the project is configured to seamlessly work with PostgreSQL, and you have the flexibility to choose any PostgreSQL database provider of your choice.
-
-When you launch the project locally for the first time, it automatically creates a PostgreSQL database on your local machine. This allows you to work with a PostgreSQL database without Docker or any additional setup.
-
-To set up a remote and production database, you need to create a PostgreSQL database and obtain the connection string. One recommended option is to use [Neon](https://get.neon.com/BMFYNtx), which provides a free PostgreSQL database. This database is compatible and has been tested with Next.js Boilerplate.
-
-After creating your Neon account, you can get the connection string and copy it to the `DATABASE_URL` variable in your `.env.production` file.
-
-> :warning: This project works out of the box with any PostgreSQL provider. Neon is mentioned here because it offers a free tier, and the link is an affiliate link. Feel free to use any PostgreSQL provider that fits your needs.
-
-#### Create a fresh and empty database
-
-If you want to create a fresh and empty database, you just need to remove the folder `local.db` from the root of the project. The next time you run the project, a new database will be created automatically.
 
 ### Translation (i18n) setup
 
@@ -146,9 +95,7 @@ After defining the environment variables in your GitHub Actions, your localizati
 ├── .github                         # GitHub folder
 │   ├── actions                     # Reusable actions
 │   └── workflows                   # GitHub Actions workflows
-├── .storybook                      # Storybook folder
 ├── .vscode                         # VSCode configuration
-├── migrations                      # Database migrations
 ├── public                          # Public assets folder
 ├── src
 │   ├── app                         # Next JS App (App Router)
@@ -161,16 +108,10 @@ After defining the environment variables in your GitHub Actions, your localizati
 │   ├── types                       # Type definitions
 │   ├── utils                       # Utilities folder
 │   └── validations                 # Validation schemas
-├── tests
-│   ├── e2e                         # E2E tests, also includes Monitoring as Code
-│   └── integration                 # Integration tests
-├── drizzle.config.ts               # Drizzle ORM configuration
 ├── eslint.config.mjs               # ESLint configuration
 ├── next.config.ts                  # Next JS configuration
-├── package.json                    # NPM dependencies and scripts
-├── playwright.config.ts            # Playwright configuration
+├── package.json                    # pnpm dependencies and scripts
 ├── tsconfig.json                   # TypeScript configuration
-└── vitest.config.mts               # Vitest configuration
 ```
 
 ### Customization
@@ -185,32 +126,12 @@ You can easily configure Next js Boilerplate by searching the entire project for
 
 You have full access to the source code for further customization. The provided code is just an example to help you start your project. The sky's the limit 🚀.
 
-### Change database schema
-
-To modify the database schema in the project, you can update the schema file located at `./src/models/Schema.ts`. This file defines the structure of your database tables using the Drizzle ORM library.
-
-After making changes to the schema, generate a migration by running the following command:
-
-```shell
-npm run db:generate
-```
-
-This will create a migration file that reflects your schema changes.
-
-After making sure your database is running, you can apply the generated migration using:
-
-```shell
-npm run db:migrate
-```
-
-There is no need to restart the Next.js server for the changes to take effect.
-
 ### Commit Message Format
 
 The project follows the [Conventional Commits](https://www.conventionalcommits.org/) specification, meaning all commit messages must be formatted accordingly. To help you write commit messages, the project provides an interactive CLI that guides you through the commit process. To use it, run the following command:
 
 ```shell
-npm run commit
+pnpm run commit
 ```
 
 One of the benefits of using Conventional Commits is the ability to automatically generate GitHub releases. It also allows us to automatically determine the next version number based on the types of commits that are included in a release.
@@ -244,7 +165,7 @@ Setting up CodeRabbit is simple, visit [coderabbit.ai](https://www.coderabbit.ai
 Generate an optimized production build locally using a temporary in-memory Postgres database:
 
 ```shell
-npm run build-local
+pnpm run build-local
 ```
 
 This command:
@@ -256,8 +177,8 @@ This command:
 
 Notes:
 
-- By default, it uses a local database, but you can also use `npm run build` with a remote database.
-- This only creates the build, it doesn't start the server. To run the build locally, use `npm run start`.
+- By default, it uses a local database, but you can also use `pnpm run build` with a remote database.
+- This only creates the build, it doesn't start the server. To run the build locally, use `pnpm run start`.
 
 ### Deploy to production
 
@@ -266,13 +187,13 @@ During the build process, database migrations are automatically executed, so the
 Then, you can generate a production build with:
 
 ```shell
-$ npm run build
+$ pnpm run build
 ```
 
 It generates an optimized production build of the boilerplate. To test the generated build, run:
 
 ```shell
-$ npm run start
+$ pnpm run start
 ```
 
 You also need to defined the environment variables `CLERK_SECRET_KEY` using your own key.
@@ -337,31 +258,21 @@ Arcjet is configured with a central client at `src/libs/Arcjet.ts` that includes
 
 The project includes several commands to ensure code quality and consistency. You can run:
 
-- `npm run lint` to check for linting errors
-- `npm run lint:fix` to automatically fix fixable issues from the linter
-- `npm run check:types` to verify type safety across the entire project
-- `npm run check:deps` help identify unused dependencies and files
-- `npm run check:i18n` ensures all translations are complete and properly formatted
+- `pnpm run lint` to check for linting errors
+- `pnpm run lint:fix` to automatically fix fixable issues from the linter
+- `pnpm run check:types` to verify type safety across the entire project
+- `pnpm run check:deps` help identify unused dependencies and files
+- `pnpm run check:i18n` ensures all translations are complete and properly formatted
 
 #### Bundle Analyzer
 
 Next.js Boilerplate includes a built-in bundle analyzer. It can be used to analyze the size of your JavaScript bundles. To begin, run the following command:
 
 ```shell
-npm run build-stats
+pnpm run build-stats
 ```
 
 By running the command, it'll automatically open a new browser window with the results.
-
-#### Database Studio
-
-The project is already configured with Drizzle Studio to explore the database. You can run the following command to open the database studio:
-
-```shell
-npm run db:studio
-```
-
-Then, you can open https://local.drizzle.studio with your favorite browser to explore your database.
 
 ### VSCode information (optional)
 
@@ -371,115 +282,7 @@ With the plugins installed in your VSCode, ESLint and Prettier can automatically
 
 Pro tips: if you need a project wide-type checking with TypeScript, you can run a build with <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd> on Mac.
 
-### Contributions
-
-Everyone is welcome to contribute to this project. Feel free to open an issue if you have any questions or find a bug. Totally open to suggestions and improvements.
-
 ### License
 
 Licensed under the MIT License, Copyright © 2026
-
 See [LICENSE](LICENSE) for more information.
-
-## Sponsors
-
-<table width="100%">
-  <tr height="187px">
-    <td align="center" width="33%">
-      <a href="https://clerk.com?utm_source=github&utm_medium=sponsorship&utm_campaign=nextjs-boilerplate">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://github.com/ixartz/SaaS-Boilerplate/assets/1328388/6fb61971-3bf1-4580-98a0-10bd3f1040a2">
-          <source media="(prefers-color-scheme: light)" srcset="https://github.com/ixartz/SaaS-Boilerplate/assets/1328388/f80a8bb5-66da-4772-ad36-5fabc5b02c60">
-          <img alt="Clerk – Authentication & User Management for Next.js" src="https://github.com/ixartz/SaaS-Boilerplate/assets/1328388/f80a8bb5-66da-4772-ad36-5fabc5b02c60">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="33%">
-      <a href="https://www.coderabbit.ai?utm_source=next_js_starter&utm_medium=github&utm_campaign=next_js_starter_oss_2025">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="public/assets/images/coderabbit-logo-dark.svg?raw=true">
-          <source media="(prefers-color-scheme: light)" srcset="public/assets/images/coderabbit-logo-light.svg?raw=true">
-          <img alt="CodeRabbit" src="public/assets/images/coderabbit-logo-light.svg?raw=true">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="33%">
-      <a href="https://sentry.io/for/nextjs/?utm_source=github&utm_medium=paid-community&utm_campaign=general-fy25q1-nextjs&utm_content=github-banner-nextjsboilerplate-logo">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="public/assets/images/sentry-white.png?raw=true">
-          <source media="(prefers-color-scheme: light)" srcset="public/assets/images/sentry-dark.png?raw=true">
-          <img alt="Sentry" src="public/assets/images/sentry-dark.png?raw=true">
-        </picture>
-      </a>
-    </td>
-  </tr>
-  <tr height="187px">
-    <td align="center" width="33%">
-      <a href="https://launch.arcjet.com/Q6eLbRE">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="public/assets/images/arcjet-dark.svg?raw=true">
-          <source media="(prefers-color-scheme: light)" srcset="public/assets/images/arcjet-light.svg?raw=true">
-          <img alt="Arcjet" src="public/assets/images/arcjet-light.svg?raw=true">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="33%">
-      <a href="https://l.crowdin.com/next-js">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="public/assets/images/crowdin-white.png?raw=true">
-          <source media="(prefers-color-scheme: light)" srcset="public/assets/images/crowdin-dark.png?raw=true">
-          <img alt="Crowdin" src="public/assets/images/crowdin-dark.png?raw=true">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="33%">
-      <a href="https://betterstack.com/?utm_source=github&utm_medium=sponsorship&utm_campaign=next-js-boilerplate">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="public/assets/images/better-stack-white.png?raw=true">
-          <source media="(prefers-color-scheme: light)" srcset="public/assets/images/better-stack-dark.png?raw=true">
-          <img alt="Better Stack" src="public/assets/images/better-stack-dark.png?raw=true">
-        </picture>
-      </a>
-    </td>
-  </tr>
-  <tr height="187px">
-    <td align="center" width="33%">
-      <a href="https://posthog.com/?utm_source=github&utm_medium=sponsorship&utm_campaign=next-js-boilerplate">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://posthog.com/brand/posthog-logo-white.svg">
-          <source media="(prefers-color-scheme: light)" srcset="https://posthog.com/brand/posthog-logo.svg">
-          <img alt="PostHog" src="https://posthog.com/brand/posthog-logo.svg">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="33%">
-      <a href="https://www.checklyhq.com/?utm_source=github&utm_medium=sponsorship&utm_campaign=next-js-boilerplate">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="public/assets/images/checkly-logo-dark.png?raw=true">
-          <source media="(prefers-color-scheme: light)" srcset="public/assets/images/checkly-logo-light.png?raw=true">
-          <img alt="Checkly" src="public/assets/images/checkly-logo-light.png?raw=true">
-        </picture>
-      </a>
-    </td>
-    <td align="center" style=width="33%">
-      <a href="https://nextjs-boilerplate.com/pro-saas-starter-kit">
-        <img src="public/assets/images/nextjs-boilerplate-saas.png?raw=true" alt="Next.js SaaS Boilerplate with React" />
-      </a>
-    </td>
-  </tr>
-  <tr height="187px">
-    <td align="center" width="33%">
-      <a href="mailto:contact@nextjs-boilerplate.com">
-        Add your logo here
-      </a>
-    </td>
-  </tr>
-</table>
-
----
-
-Made with ♥ by [CreativeDesignsGuru](https://creativedesignsguru.com) [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/cloudposse.svg?style=social&label=Follow%20%40Ixartz)](https://twitter.com/ixartz)
-
-Looking for a custom boilerplate to kick off your project? I'd be glad to discuss how I can help you build one. Feel free to reach out anytime at contact@nextjs-boilerplate.com!
-
-[![Sponsor Next JS Boilerplate](https://cdn.buymeacoffee.com/buttons/default-red.png)](https://github.com/sponsors/ixartz)

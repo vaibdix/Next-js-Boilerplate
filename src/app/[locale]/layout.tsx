@@ -1,12 +1,18 @@
 import type { Metadata, Viewport } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
+import { Manrope } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { DemoBadge } from '@/components/DemoBadge';
+import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { ThemeProvider } from '@/components/theme-provider';
+import { cn } from '@/lib/utils';
 import { routing } from '@/libs/I18nRouting';
+import { getBaseUrl } from '@/utils/Helpers';
 import '@/styles/global.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getBaseUrl()),
   icons: [
     {
       rel: 'apple-touch-icon',
@@ -29,12 +35,25 @@ export const metadata: Metadata = {
       url: '/favicon.ico',
     },
   ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
 };
+
+const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans' });
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -53,13 +72,18 @@ export default async function RootLayout(props: {
   setRequestLocale(locale);
 
   return (
-    <html lang={locale}>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={cn('antialiased', manrope.variable)}
+    >
       <body>
         <NextIntlClientProvider>
-          {props.children}
+          <ThemeProvider>{props.children}</ThemeProvider>
 
           <DemoBadge />
         </NextIntlClientProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   );

@@ -11,6 +11,30 @@ const baseConfig: NextConfig = {
   },
   poweredByHeader: false,
   reactStrictMode: true,
+  headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-DNS-Prefetch-Control', value: 'on' },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+        ],
+      },
+    ];
+  },
   reactCompiler: process.env.NODE_ENV === 'production', // Keep the development environment fast
   outputFileTracingIncludes: {
     '/': ['./migrations/**/*'],
@@ -21,20 +45,23 @@ const baseConfig: NextConfig = {
 let configWithPlugins = createNextIntlPlugin('./src/libs/I18n.ts')(baseConfig);
 
 // Conditionally enable bundle analysis
-if (process.env.ANALYZE === 'true') {
+if (process.env['ANALYZE'] === 'true') {
   configWithPlugins = withBundleAnalyzer()(configWithPlugins);
 }
 
 // Conditionally enable Sentry configuration
-if (!process.env.NEXT_PUBLIC_SENTRY_DISABLED) {
+if (
+  process.env['NEXT_PUBLIC_SENTRY_DISABLED'] === undefined ||
+  process.env['NEXT_PUBLIC_SENTRY_DISABLED'] === ''
+) {
   configWithPlugins = withSentryConfig(configWithPlugins, {
     // For all available options, see:
     // https://www.npmjs.com/package/@sentry/webpack-plugin#options
-    org: process.env.SENTRY_ORGANIZATION,
-    project: process.env.SENTRY_PROJECT,
+    org: process.env['SENTRY_ORGANIZATION'] ?? '',
+    project: process.env['SENTRY_PROJECT'] ?? '',
 
     // Only print logs for uploading source maps in CI
-    silent: !process.env.CI,
+    silent: process.env['CI'] === undefined || process.env['CI'] === '',
 
     // For all available options, see:
     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/

@@ -6,7 +6,7 @@ import { routing } from '@/libs/I18nRouting';
  * @returns The configured public app URL or the local development URL.
  */
 export const getBaseUrl = () => {
-  if (Env.NEXT_PUBLIC_APP_URL) {
+  if (Env.NEXT_PUBLIC_APP_URL !== undefined && Env.NEXT_PUBLIC_APP_URL !== '') {
     return Env.NEXT_PUBLIC_APP_URL;
   }
 

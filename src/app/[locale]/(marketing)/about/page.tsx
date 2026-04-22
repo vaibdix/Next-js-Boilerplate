@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import Image from 'next/image';
 import crowdinLogo from '@/public/assets/images/crowdin-dark.png';
+import { generatePageMetadata } from '@/utils/Metadata';
 
 type AboutPageProps = {
   params: Promise<{ locale: string }>;
@@ -11,15 +12,8 @@ export async function generateMetadata(
   props: AboutPageProps
 ): Promise<Metadata> {
   const { locale } = await props.params;
-  const t = await getTranslations({
-    locale,
-    namespace: 'About',
-  });
 
-  return {
-    title: t('meta_title'),
-    description: t('meta_description'),
-  };
+  return generatePageMetadata({ locale, namespace: 'About', path: '/about' });
 }
 
 export default async function About(props: AboutPageProps) {

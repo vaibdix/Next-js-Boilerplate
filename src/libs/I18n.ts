@@ -21,7 +21,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
-    // oxlint-disable-next-line unicorn/no-await-expression-member
+    // oxlint-disable-next-line unicorn/no-await-expression-member, typescript/no-unsafe-assignment, typescript/no-unsafe-member-access
     messages: (await import(`../locales/${locale}.json`)).default,
   };
 });

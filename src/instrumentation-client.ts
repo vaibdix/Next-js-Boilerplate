@@ -4,9 +4,12 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 import * as Sentry from '@sentry/nextjs';
 
-if (!process.env.NEXT_PUBLIC_SENTRY_DISABLED) {
+if (
+  process.env['NEXT_PUBLIC_SENTRY_DISABLED'] === undefined ||
+  process.env['NEXT_PUBLIC_SENTRY_DISABLED'] === ''
+) {
   Sentry.init({
-    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    dsn: process.env['NEXT_PUBLIC_SENTRY_DSN'],
 
     // Add optional integrations for additional features
     integrations: [

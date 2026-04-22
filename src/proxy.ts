@@ -40,7 +40,10 @@ export default async function proxy(
 ) {
   // Verify the request with Arcjet
   // Use `process.env` instead of Env to reduce bundle size in middleware
-  if (process.env.ARCJET_KEY) {
+  if (
+    process.env['ARCJET_KEY'] !== undefined &&
+    process.env['ARCJET_KEY'] !== ''
+  ) {
     const decision = await aj.protect(request);
 
     if (decision.isDenied()) {
@@ -53,7 +56,7 @@ export default async function proxy(
     return clerkMiddleware(async (auth, req) => {
       if (isProtectedRoute(req)) {
         const locale =
-          req.nextUrl.pathname.match(/(\/.*)\/dashboard/)?.at(1) ?? '';
+          /(\/.*)\/dashboard/.exec(req.nextUrl.pathname)?.at(1) ?? '';
 
         const signInUrl = new URL(`${locale}/sign-in`, req.url);
 
