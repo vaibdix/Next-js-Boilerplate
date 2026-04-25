@@ -2,10 +2,11 @@ import type { Metadata, Viewport } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { Manrope } from 'next/font/google';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { DemoBadge } from '@/components/DemoBadge';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import { ThemeProvider } from '@/components/theme-provider';
+import { isTheme, THEME_COOKIE_NAME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { routing } from '@/libs/I18nRouting';
 import { getBaseUrl } from '@/utils/Helpers';
@@ -51,6 +52,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#252525' },
+  ],
 };
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans' });
@@ -64,6 +69,13 @@ export default async function RootLayout(props: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await props.params;
+  const cookieStore = await cookies();
+  const cookieTheme = cookieStore.get(THEME_COOKIE_NAME)?.value;
+  const initialTheme = isTheme(cookieTheme) ? cookieTheme : 'system';
+  const resolvedTheme =
+    initialTheme === 'light' || initialTheme === 'dark'
+      ? initialTheme
+      : undefined;
 
   if (!hasLocale(routing.locales, locale)) {
     notFound();
@@ -75,13 +87,21 @@ export default async function RootLayout(props: {
     <html
       lang={locale}
       suppressHydrationWarning
-      className={cn('antialiased', manrope.variable)}
+      className={cn(
+        'antialiased',
+        manrope.variable,
+        resolvedTheme === 'dark' && 'dark',
+        resolvedTheme === 'light' && 'light'
+      )}
+      style={
+        resolvedTheme === undefined ? undefined : { colorScheme: resolvedTheme }
+      }
     >
       <body>
         <NextIntlClientProvider>
-          <ThemeProvider>{props.children}</ThemeProvider>
-
-          <DemoBadge />
+          <ThemeProvider initialTheme={initialTheme}>
+            {props.children}
+          </ThemeProvider>
         </NextIntlClientProvider>
         <GoogleAnalytics />
       </body>

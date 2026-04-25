@@ -2,7 +2,7 @@
   "RootLayout": {
     "home_link": "Accueil",
     "about_link": "A propos",
-    "portfolio_link": "Portfolio",
+    "contact_link": "Contact",
     "sign_in_link": "Se connecter",
     "sign_up_link": "S'inscrire"
   },
@@ -11,11 +11,50 @@
     "footer_text": "© {year} {name}. Fait avec <author></author>.",
     "main_navigation_label": "Navigation principale"
   },
+  "Navigation": {
+    "home": "Accueil",
+    "about": "A propos",
+    "contact": "Contact",
+    "sign_in": "Se connecter",
+    "get_started": "Commencer"
+  },
+  "Hero": {
+    "badge_label": "MAINTENANT",
+    "badge_text": "accepte de nouveaux projets clients",
+    "heading": "Créer des expériences numériques qui stimulent la croissance",
+    "description": "Nous aidons les marques à se développer plus rapidement grâce au design, au développement et à l'exécution stratégique.",
+    "cta_call": "Réserver un appel",
+    "cta_start": "Commencer"
+  },
+  "Logos": {
+    "trusted_by": "Fait confiance par",
+    "experts": "les experts"
+  },
   "Index": {
     "meta_title": "Présentation de Next.js Boilerplate",
     "meta_description": "Next js Boilerplate est le code de démarrage parfait pour votre projet. Construisez votre application React avec le framework Next.js.",
     "sponsors_title": "Partenaires",
-    "zap_emoji_label": "Éclair"
+    "zap_emoji_label": "Éclair",
+    "features_heading": "Code de démarrage pour votre projet Next.js avec Tailwind CSS",
+    "features_description": "Un starter convivial construit avec Tailwind CSS et TypeScript. <zap></zap> Conçu pour l'expérience développeur, il inclut :",
+    "feature_nextjs": "Next.js avec le support App Router",
+    "feature_typescript": "TypeScript pour la vérification de types",
+    "feature_tailwind": "Intégration de Tailwind CSS",
+    "feature_auth": "Authentification avec <clerk>Clerk</clerk> (sans mot de passe, sociale, multi-facteurs)",
+    "feature_orm": "ORM avec DrizzleORM (PostgreSQL, SQLite, MySQL)",
+    "feature_db": "Base de données de développement avec PGlite, production avec <neon>Neon</neon>",
+    "feature_i18n": "Multilingue (i18n) avec next-intl et <crowdin>Crowdin</crowdin>",
+    "feature_forms": "Gestion de formulaires (React Hook Form) et validation (Zod)",
+    "feature_lint": "Linting et formatage (OxLint, OxFmt)",
+    "feature_git": "Hooks Git et linting de commits (Lefthook, Commitlint)",
+    "feature_testing": "Suite de tests (Vitest, React Testing Library, Playwright)",
+    "feature_storybook": "Storybook pour le développement UI",
+    "feature_codereview": "Revues de code par IA avec <coderabbit>CodeRabbit</coderabbit>",
+    "feature_monitoring": "Surveillance d'erreurs (<sentry>Sentry</sentry>) et journalisation (LogTape)",
+    "feature_checkly": "Surveillance en tant que code (Checkly)",
+    "feature_security": "Sécurité et protection contre les bots (<arcjet>Arcjet</arcjet>)",
+    "feature_seo": "Optimisation SEO (métadonnées, JSON-LD, balises Open Graph)",
+    "feature_devtools": "Outils de développement (config VSCode, analyseur de bundles, changelog)"
   },
   "About": {
     "meta_title": "A propos",
@@ -23,19 +62,58 @@
     "about_paragraph": "Bienvenue sur notre page À propos ! Nous sommes une équipe de passionnés et dévoués à la création de logiciels.",
     "translation_powered_by": "Traduction propulsée par"
   },
-  "Portfolio": {
-    "meta_title": "Portfolio",
-    "meta_description": "Bienvenue sur la page de mon portfolio !",
-    "presentation": "Bienvenue sur ma page portfolio ! Vous trouverez ici une collection soigneusement organisée de mon travail et de mes réalisations. À travers ce portfolio, je mets en valeur mon expertise, ma créativité et la valeur que je peux apporter à vos projets.",
-    "portfolio_name": "Portfolio {name}",
-    "error_reporting_powered_by": "Rapport d'erreur propulsé par"
+  "Contact": {
+    "meta_title": "Contact",
+    "meta_description": "Contactez-nous. Nous serions ravis de vous entendre.",
+    "heading": "Contactez-nous",
+    "description": "Si vous avez des questions concernant nos services ou avez besoin d'aide, veuillez remplir le formulaire ici.",
+    "response_time": "Nous faisons de notre mieux pour répondre dans un délai d'un jour ouvrable.",
+    "email_label": "Email",
+    "email_value": "mail@example.com",
+    "phone_label": "Téléphone",
+    "phone_value": "+92 312 1234567",
+    "form_name": "Nom complet",
+    "form_name_placeholder": "Jean Dupont",
+    "form_email": "Email",
+    "form_email_placeholder": "jeandupont@example.com",
+    "form_phone": "Téléphone",
+    "form_phone_placeholder": "+33 1 23 45 67 89",
+    "form_message": "Message",
+    "form_message_placeholder": "Votre message",
+    "form_submit": "Envoyer",
+    "form_submit_pending": "Envoi...",
+    "form_submit_error": "Impossible d'envoyer votre message.",
+    "form_name_error": "Saisissez votre nom complet.",
+    "form_email_error": "Saisissez une adresse email valide.",
+    "form_phone_error": "Saisissez un numéro de téléphone valide.",
+    "form_message_error": "Saisissez un message d'au moins 10 caractères.",
+    "form_success": "Votre message a été envoyé."
   },
-  "PortfolioSlug": {
-    "meta_title": "Portfolio {slug}",
-    "meta_description": "Description du Portfolio {slug}",
-    "header": "Portfolio {slug}",
-    "content": "Créé un ensemble de matériel promotionnel et d'éléments de marquage pour un événement d'entreprise. Conçu un thème visuellement unifié, englobant un logo, des affiches, des bannières et des actifs numériques. Intégrer l'identité de marque du client tout en l'insufflant à une approche contemporaine et innovante.",
-    "code_review_powered_by": "Code review propulsé par"
+  "Footer": {
+    "copyright": "© {year} efferd, Tous droits réservés",
+    "about_us": "À propos",
+    "support": "Support",
+    "community": "Communauté",
+    "press": "Presse",
+    "pricing": "Tarifs",
+    "testimonials": "Témoignages",
+    "faqs": "FAQ",
+    "contact_us": "Contactez-nous",
+    "blog": "Blog",
+    "help_center": "Centre d'aide",
+    "terms": "Conditions",
+    "privacy": "Confidentialité",
+    "security": "Sécurité",
+    "cookie_policy": "Politique de cookies",
+    "forum": "Forum",
+    "events": "Événements",
+    "partners": "Partenaires",
+    "affiliates": "Affiliés",
+    "career": "Carrière",
+    "investors": "Investisseurs",
+    "terms_of_use": "Conditions d'utilisation",
+    "privacy_policy": "Politique de confidentialité",
+    "legal": "Mentions légales"
   },
   "SignIn": {
     "meta_title": "Se connecter",
@@ -60,6 +138,17 @@
     "dashboard_link": "Tableau de bord",
     "user_profile_link": "Gérer votre compte",
     "sign_out": "Se déconnecter"
+  },
+  "Error": {
+    "heading": "Une erreur est survenue",
+    "description": "Une erreur inattendue s'est produite. Veuillez réessayer.",
+    "error_id": "ID d'erreur : {id}",
+    "retry": "Réessayer"
+  },
+  "NotFound": {
+    "heading": "Page introuvable",
+    "description": "La page que vous recherchez n'existe pas ou a été déplacée.",
+    "go_home": "Retour à l'accueil"
   },
   "LocaleSwitcher": {
     "change_language": "Changer de langue"

@@ -5,6 +5,7 @@ export const Env = createEnv({
   server: {
     ARCJET_KEY: z.string().startsWith('ajkey_').optional(),
     CLERK_SECRET_KEY: z.string().min(1),
+    FORMSUBMIT_EMAIL: z.email(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().optional(),
@@ -23,6 +24,7 @@ export const Env = createEnv({
   runtimeEnv: {
     ARCJET_KEY: process.env['ARCJET_KEY'],
     CLERK_SECRET_KEY: process.env['CLERK_SECRET_KEY'],
+    FORMSUBMIT_EMAIL: process.env['FORMSUBMIT_EMAIL'],
     NEXT_PUBLIC_APP_URL: process.env['NEXT_PUBLIC_APP_URL'],
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env['NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY'],

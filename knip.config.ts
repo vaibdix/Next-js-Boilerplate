@@ -1,39 +1,24 @@
 import type { KnipConfig } from 'knip';
 
 const config: KnipConfig = {
-  // Files to exclude from Knip analysis
   ignore: [
     'src/libs/I18n.ts',
     'src/types/I18n.ts',
     'src/libs/Logger.ts',
     'src/components/ui/**',
-    'src/components/header.tsx',
-    'src/components/hero.tsx',
-    'src/components/logo-cloud.tsx',
     'src/components/logo.tsx',
-    'src/components/logos-section.tsx',
-    'src/components/mobile-nav.tsx',
-    'src/components/nav-links.ts',
-    'src/hooks/use-scroll.ts',
   ],
-  // Dependencies to ignore during analysis
+
   ignoreDependencies: [
     '@commitlint/types',
     '@clerk/shared',
-    '@swc/helpers', // Avoid error in CI: "`npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync."
-    '@base-ui/react',
-    '@hookform/resolvers',
+    '@swc/helpers',
     '@logtape/logtape',
-    'class-variance-authority',
-    'lucide-react',
-    'react-hook-form',
     'postcss',
   ],
-  // Binaries to ignore during analysis
-  ignoreBinaries: [
-    'dotenv',
-    'production', // False positive raised with dotenv-cli
-  ],
+
+  ignoreBinaries: ['dotenv', 'production'],
+
   compilers: {
     css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/g)].join('\n'),
   },

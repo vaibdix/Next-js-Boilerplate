@@ -9,6 +9,14 @@ const baseConfig: NextConfig = {
   devIndicators: {
     position: 'bottom-right',
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.efferd.com',
+      },
+    ],
+  },
   poweredByHeader: false,
   reactStrictMode: true,
   headers() {
@@ -35,7 +43,7 @@ const baseConfig: NextConfig = {
       },
     ];
   },
-  reactCompiler: process.env.NODE_ENV === 'production', // Keep the development environment fast
+  reactCompiler: true,
   outputFileTracingIncludes: {
     '/': ['./migrations/**/*'],
   },

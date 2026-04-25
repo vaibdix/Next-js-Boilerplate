@@ -1,12 +1,16 @@
 import { XIcon, MenuIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import React from 'react';
+import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { navLinks } from '@/components/nav-links';
 import { Button } from '@/components/ui/button';
 import { Portal, PortalBackdrop } from '@/components/ui/portal';
 import { cn } from '@/lib/utils';
+import { Link } from '@/libs/I18nNavigation';
 
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
+  const t = useTranslations('Navigation');
 
   return (
     <div className="md:hidden">
@@ -41,20 +45,34 @@ export function MobileNav() {
               {navLinks.map((link) => (
                 <Button
                   className="justify-start"
-                  key={link.label}
+                  key={link.key}
                   variant="ghost"
-                  render={<a href={link.href} />}
+                  render={<Link href={link.href} />}
                   nativeButton={false}
                 >
-                  {link.label}
+                  {t(link.key)}
                 </Button>
               ))}
             </div>
             <div className="mt-12 flex flex-col gap-2">
-              <Button className="w-full" variant="outline">
-                Sign In
+              <Button
+                className="w-full"
+                variant="outline"
+                render={<Link href="/sign-in/" />}
+                nativeButton={false}
+              >
+                {t('sign_in')}
               </Button>
-              <Button className="w-full">Get Started</Button>
+              <Button
+                className="w-full"
+                render={<Link href="/sign-up/" />}
+                nativeButton={false}
+              >
+                {t('get_started')}
+              </Button>
+              <div className="mt-4 flex justify-center">
+                <LocaleSwitcher />
+              </div>
             </div>
           </div>
         </Portal>

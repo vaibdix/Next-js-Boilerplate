@@ -26,7 +26,7 @@ export const LocaleSwitcher = () => {
     <select
       defaultValue={locale}
       onChange={handleChange}
-      className="border border-gray-300 font-medium focus:outline-hidden focus-visible:ring-3"
+      className="h-8 rounded-md border bg-background px-2 text-sm font-medium text-foreground focus:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
       aria-label={t('change_language')}
     >
       {routing.locales.map((elt) => (

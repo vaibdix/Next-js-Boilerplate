@@ -2,7 +2,7 @@
   "RootLayout": {
     "home_link": "Home",
     "about_link": "About",
-    "portfolio_link": "Portfolio",
+    "contact_link": "Contact",
     "sign_in_link": "Sign in",
     "sign_up_link": "Sign up"
   },
@@ -11,11 +11,50 @@
     "footer_text": "© {year} {name}. Made with <author></author>.",
     "main_navigation_label": "Main navigation"
   },
+  "Navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "sign_in": "Sign In",
+    "get_started": "Get Started"
+  },
+  "Hero": {
+    "badge_label": "NOW",
+    "badge_text": "accepting new client projects",
+    "heading": "Building Digital Experiences That Drive Growth",
+    "description": "We help brands scale faster through design, development and strategic execution.",
+    "cta_call": "Book a Call",
+    "cta_start": "Get started"
+  },
+  "Logos": {
+    "trusted_by": "Trusted by",
+    "experts": "experts"
+  },
   "Index": {
     "meta_title": "Next.js Boilerplate Presentation",
     "meta_description": "Next js Boilerplate is the perfect starter code for your project. Build your React application with the Next.js framework.",
     "sponsors_title": "Sponsors",
-    "zap_emoji_label": "Zap"
+    "zap_emoji_label": "Zap",
+    "features_heading": "Boilerplate code for your Next.js project with Tailwind CSS",
+    "features_description": "A developer-friendly starter built with Tailwind CSS and TypeScript. <zap></zap> Designed with developer experience in mind, it includes:",
+    "feature_nextjs": "Next.js with App Router support",
+    "feature_typescript": "TypeScript for type checking",
+    "feature_tailwind": "Tailwind CSS integration",
+    "feature_auth": "Authentication with <clerk>Clerk</clerk> (passwordless, social, multi-factor)",
+    "feature_orm": "ORM with DrizzleORM (PostgreSQL, SQLite, MySQL)",
+    "feature_db": "Dev database with PGlite, production with <neon>Neon</neon>",
+    "feature_i18n": "Multi-language (i18n) with next-intl and <crowdin>Crowdin</crowdin>",
+    "feature_forms": "Form handling (React Hook Form) and validation (Zod)",
+    "feature_lint": "Linting and formatting (OxLint, OxFmt)",
+    "feature_git": "Git hooks and commit linting (Lefthook, Commitlint)",
+    "feature_testing": "Testing suite (Vitest, React Testing Library, Playwright)",
+    "feature_storybook": "Storybook for UI development",
+    "feature_codereview": "AI-powered code reviews with <coderabbit>CodeRabbit</coderabbit>",
+    "feature_monitoring": "Error monitoring (<sentry>Sentry</sentry>) and logging (LogTape)",
+    "feature_checkly": "Monitoring as Code (Checkly)",
+    "feature_security": "Security and bot protection (<arcjet>Arcjet</arcjet>)",
+    "feature_seo": "SEO optimization (metadata, JSON-LD, Open Graph tags)",
+    "feature_devtools": "Development tools (VSCode config, bundler analyzer, changelog)"
   },
   "About": {
     "meta_title": "About",
@@ -23,19 +62,58 @@
     "about_paragraph": "Welcome to our About page! We are a team of passionate individuals dedicated to creating amazing software.",
     "translation_powered_by": "Translation powered by"
   },
-  "Portfolio": {
-    "meta_title": "Portfolio",
-    "meta_description": "Welcome to my portfolio page!",
-    "presentation": "Welcome to my portfolio page! Here you will find a carefully curated collection of my work and accomplishments. Through this portfolio, I'm to showcase my expertise, creativity, and the value I can bring to your projects.",
-    "portfolio_name": "Portfolio {name}",
-    "error_reporting_powered_by": "Error reporting powered by"
+  "Contact": {
+    "meta_title": "Contact",
+    "meta_description": "Get in touch with us. We'd love to hear from you.",
+    "heading": "Contact with us",
+    "description": "If you have any questions regarding our services or need help, please fill out the form here.",
+    "response_time": "We do our best to respond within 1 business day.",
+    "email_label": "Email",
+    "email_value": "mail@example.com",
+    "phone_label": "Phone",
+    "phone_value": "+92 312 1234567",
+    "form_name": "Full name",
+    "form_name_placeholder": "John Doe",
+    "form_email": "Email",
+    "form_email_placeholder": "johndoe@example.com",
+    "form_phone": "Phone",
+    "form_phone_placeholder": "+1 (555) 123-4567",
+    "form_message": "Message",
+    "form_message_placeholder": "Your message",
+    "form_submit": "Submit",
+    "form_submit_pending": "Sending...",
+    "form_submit_error": "Unable to send your message.",
+    "form_name_error": "Enter your full name.",
+    "form_email_error": "Enter a valid email address.",
+    "form_phone_error": "Enter a valid phone number.",
+    "form_message_error": "Enter a message with at least 10 characters.",
+    "form_success": "Your message has been sent."
   },
-  "PortfolioSlug": {
-    "meta_title": "Portfolio {slug}",
-    "meta_description": "Portfolio {slug} description",
-    "header": "Portfolio {slug}",
-    "content": "Created a set of promotional materials and branding elements for a corporate event. Crafted a visually unified theme, encompassing a logo, posters, banners, and digital assets. Integrated the client's brand identity while infusing it with a contemporary and innovative approach.",
-    "code_review_powered_by": "Code review powered by"
+  "Footer": {
+    "copyright": "© {year} efferd, All rights reserved",
+    "about_us": "About Us",
+    "support": "Support",
+    "community": "Community",
+    "press": "Press",
+    "pricing": "Pricing",
+    "testimonials": "Testimonials",
+    "faqs": "FAQs",
+    "contact_us": "Contact Us",
+    "blog": "Blog",
+    "help_center": "Help Center",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "security": "Security",
+    "cookie_policy": "Cookie Policy",
+    "forum": "Forum",
+    "events": "Events",
+    "partners": "Partners",
+    "affiliates": "Affiliates",
+    "career": "Career",
+    "investors": "Investors",
+    "terms_of_use": "Terms of Use",
+    "privacy_policy": "Privacy Policy",
+    "legal": "Legal"
   },
   "SignIn": {
     "meta_title": "Sign in",
@@ -60,6 +138,17 @@
     "dashboard_link": "Dashboard",
     "user_profile_link": "Manage your account",
     "sign_out": "Sign out"
+  },
+  "Error": {
+    "heading": "Something went wrong",
+    "description": "An unexpected error occurred. Please try again.",
+    "error_id": "Error ID: {id}",
+    "retry": "Try again"
+  },
+  "NotFound": {
+    "heading": "Page not found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "go_home": "Go home"
   },
   "LocaleSwitcher": {
     "change_language": "Change language"
