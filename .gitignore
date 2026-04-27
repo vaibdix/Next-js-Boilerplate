@@ -62,3 +62,8 @@ build-archive.log
 /playwright/.cache/
 
 node-compile-cache/
+
+# nix
+result
+result-*
+.direnv

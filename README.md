@@ -15,10 +15,9 @@ Developer experience first, extremely flexible code structure and only keep what
 - ♻️ Type-safe environment variables with T3 Env
 - ⌨️ Form handling with React Hook Form
 - 🔴 Validation library with Zod
-- 📏 Linter with Oxlint with Ultracite preset (replacing ESLint)
-- 💖 Code Formatter with Oxfmt (replacing Prettier)
-- 🦊 Husky for Git Hooks (replaced by Lefthook)
-- 🚫 Lint-staged for running linters on Git staged files
+- 📏 Linter with Oxlint with Ultracite preset
+- 💖 Code Formatter with Oxfmt
+- 🦊 Lefthook for Git Hooks
 - 🚓 Lint git commit with Commitlint
 - 📓 Write standard compliant commit messages with Commitizen
 - 🔍 Unused files and dependencies detection with Knip
@@ -29,14 +28,12 @@ Developer experience first, extremely flexible code structure and only keep what
 - 📝 Logging with LogTape and Log Management with [Better Stack](https://betterstack.com/?utm_source=github&utm_medium=sponsorship&utm_campaign=next-js-boilerplate)
 - 🖥️ Monitoring as Code with [Checkly](https://www.checklyhq.com/?utm_source=github&utm_medium=sponsorship&utm_campaign=next-js-boilerplate)
 - 🔐 Security and bot protection ([Arcjet](https://launch.arcjet.com/Q6eLbRE))
-- 📊 Analytics with PostHog
 - 🎁 Automatic changelog generation with Semantic Release
 - 💡 Absolute Imports using `@` prefix
 - 🗂 VSCode configuration: Debug, Settings, Tasks and Extensions
 - 🤖 SEO metadata, JSON-LD and Open Graph tags
 - 🗺️ Sitemap.xml and robots.txt
 - 👷 Automatic dependency updates with Dependabot
-- ⌘ Database exploration with Drizzle Studio and CLI migration tool with Drizzle Kit
 - ⚙️ Bundler Analyzer
 - 🌈 Include a FREE minimalist theme
 - 💯 Maximize lighthouse score
@@ -67,6 +64,51 @@ Optional features (easy to add):
 ### Requirements
 
 - Node.js 24+ and pnpm
+
+### Getting started with Dev Containers
+
+The project includes a `.devcontainer/` configuration for a fully reproducible development environment via [VS Code Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers) or [GitHub Codespaces](https://github.com/features/codespaces).
+
+1. Open the project in VS Code and run **Dev Containers: Reopen in Container** from the command palette, or launch a new Codespace on GitHub.
+2. The container automatically installs Node.js 24, enables pnpm, runs `pnpm install`, and sets up Lefthook git hooks.
+3. Create a `.env.local` file with your Clerk and other required keys (see [Set up authentication](#set-up-authentication) below).
+4. Start the dev server:
+
+```shell
+pnpm dev
+```
+
+Port 3000 (Next.js) opens in your browser automatically. Port 8969 (Sentry Spotlight) is also forwarded.
+
+### Getting started with Nix
+
+The project includes a `flake.nix` for a reproducible development environment using [Nix](https://nixos.org/).
+
+**Prerequisites:** Install Nix with flakes enabled. The recommended installer is [Determinate Nix Installer](https://github.com/DeterminateSystems/nix-installer) which enables flakes by default.
+
+1. Enter the development shell:
+
+```shell
+nix develop
+```
+
+2. Install dependencies and start the dev server:
+
+```shell
+pnpm install
+pnpm dev
+```
+
+**Optional: automatic shell activation with direnv**
+
+If you use [direnv](https://direnv.net/), create an `.envrc` file in the project root:
+
+```shell
+echo "use flake" > .envrc
+direnv allow
+```
+
+The development environment will activate automatically when you `cd` into the project directory.
 
 ### Set up authentication
 
@@ -102,7 +144,6 @@ After defining the environment variables in your GitHub Actions, your localizati
 │   ├── components                  # React components
 │   ├── libs                        # 3rd party libraries configuration
 │   ├── locales                     # Locales folder (i18n messages)
-│   ├── models                      # Database models
 │   ├── styles                      # Styles folder
 │   ├── templates                   # Templates folder
 │   ├── types                       # Type definitions
@@ -160,43 +201,21 @@ The project uses [CodeRabbit](https://www.coderabbit.ai?utm_source=next_js_start
 
 Setting up CodeRabbit is simple, visit [coderabbit.ai](https://www.coderabbit.ai?utm_source=next_js_starter&utm_medium=github&utm_campaign=next_js_starter_oss_2025), sign in with your GitHub account, and add your repository from the dashboard. That's it!
 
-### Local Production Build
-
-Generate an optimized production build locally using a temporary in-memory Postgres database:
-
-```shell
-pnpm run build-local
-```
-
-This command:
-
-- Starts a temporary in-memory Database server
-- Runs database migrations with Drizzle Kit
-- Builds the Next.js app for production
-- Shuts down the temporary DB when the build finishes
-
-Notes:
-
-- By default, it uses a local database, but you can also use `pnpm run build` with a remote database.
-- This only creates the build, it doesn't start the server. To run the build locally, use `pnpm run start`.
-
 ### Deploy to production
 
-During the build process, database migrations are automatically executed, so there's no need to run them manually. However, you must define `DATABASE_URL` in your environment variables. You can use any PostgreSQL provider, but we recommend using [Neon](https://get.neon.com/BMFYNtx), which offers a free tier and is compatible with Next.js Boilerplate.
-
-Then, you can generate a production build with:
+Generate a production build with:
 
 ```shell
-$ pnpm run build
+pnpm run build
 ```
 
 It generates an optimized production build of the boilerplate. To test the generated build, run:
 
 ```shell
-$ pnpm run start
+pnpm run start
 ```
 
-You also need to defined the environment variables `CLERK_SECRET_KEY` using your own key.
+You need to define the environment variable `CLERK_SECRET_KEY` using your own key.
 
 This command starts a local server using the production build. You can now open http://localhost:3000 in your preferred browser to see the result.
 
@@ -278,7 +297,7 @@ By running the command, it'll automatically open a new browser window with the r
 
 If you are VSCode user, you can have a better integration with VSCode by installing the suggested extension in `.vscode/extension.json`. The starter code comes up with Settings for a seamless integration with VSCode. The Debug configuration is also provided for frontend and backend debugging experience.
 
-With the plugins installed in your VSCode, ESLint and Prettier can automatically fix the code and display errors. The same applies to testing: you can install the VSCode Vitest extension to automatically run your tests, and it also shows the code coverage in context.
+With the plugins installed in your VSCode, Oxlint and Oxfmt can automatically fix the code and display errors.
 
 Pro tips: if you need a project wide-type checking with TypeScript, you can run a build with <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd> on Mac.
 

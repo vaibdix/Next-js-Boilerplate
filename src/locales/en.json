@@ -41,17 +41,12 @@
     "feature_typescript": "TypeScript for type checking",
     "feature_tailwind": "Tailwind CSS integration",
     "feature_auth": "Authentication with <clerk>Clerk</clerk> (passwordless, social, multi-factor)",
-    "feature_orm": "ORM with DrizzleORM (PostgreSQL, SQLite, MySQL)",
-    "feature_db": "Dev database with PGlite, production with <neon>Neon</neon>",
     "feature_i18n": "Multi-language (i18n) with next-intl and <crowdin>Crowdin</crowdin>",
     "feature_forms": "Form handling (React Hook Form) and validation (Zod)",
     "feature_lint": "Linting and formatting (OxLint, OxFmt)",
     "feature_git": "Git hooks and commit linting (Lefthook, Commitlint)",
-    "feature_testing": "Testing suite (Vitest, React Testing Library, Playwright)",
-    "feature_storybook": "Storybook for UI development",
     "feature_codereview": "AI-powered code reviews with <coderabbit>CodeRabbit</coderabbit>",
     "feature_monitoring": "Error monitoring (<sentry>Sentry</sentry>) and logging (LogTape)",
-    "feature_checkly": "Monitoring as Code (Checkly)",
     "feature_security": "Security and bot protection (<arcjet>Arcjet</arcjet>)",
     "feature_seo": "SEO optimization (metadata, JSON-LD, Open Graph tags)",
     "feature_devtools": "Development tools (VSCode config, bundler analyzer, changelog)"
@@ -147,8 +142,9 @@
   },
   "NotFound": {
     "heading": "Page not found",
-    "description": "The page you are looking for does not exist or has been moved.",
-    "go_home": "Go home"
+    "description": "The page you're looking for might have been moved or doesn't exist.",
+    "go_home": "Go Home",
+    "explore": "Explore"
   },
   "LocaleSwitcher": {
     "change_language": "Change language"
