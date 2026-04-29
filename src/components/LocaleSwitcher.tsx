@@ -18,8 +18,13 @@ export const LocaleSwitcher = () => {
       return;
     }
 
-    const { search } = window.location;
-    router.push(`${pathname}${search}`, { locale: newLocale, scroll: false });
+    router.push(
+      {
+        pathname,
+        query: Object.fromEntries(new URLSearchParams(window.location.search)),
+      },
+      { locale: newLocale, scroll: false }
+    );
   };
 
   return (

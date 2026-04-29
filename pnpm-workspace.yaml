@@ -1,0 +1,9 @@
+settings:
+  minimumReleaseAge: 1440
+  strictPeerDependencies: true
+  onlyBuiltDependencies:
+    - '@parcel/watcher'
+    - '@sentry/cli'
+    - '@swc/core'
+    - lefthook
+    - sharp

@@ -4,13 +4,18 @@ import { setRequestLocale } from 'next-intl/server';
 import { Manrope } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { AnnouncerProvider } from '@/components/announcer';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { QueryProvider } from '@/components/query-provider';
+import { SkipToContent } from '@/components/skip-to-content';
 import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { WebVitals } from '@/components/web-vitals';
 import { isTheme, THEME_COOKIE_NAME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { routing } from '@/libs/I18nRouting';
 import { getBaseUrl } from '@/utils/Helpers';
-import '@/styles/global.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
@@ -98,12 +103,21 @@ export default async function RootLayout(props: {
       }
     >
       <body>
+        <SkipToContent />
         <NextIntlClientProvider>
-          <ThemeProvider initialTheme={initialTheme}>
-            {props.children}
-          </ThemeProvider>
+          <QueryProvider>
+            <ThemeProvider initialTheme={initialTheme}>
+              <AnnouncerProvider>
+                <TooltipProvider>
+                  <main id="main-content">{props.children}</main>
+                </TooltipProvider>
+              </AnnouncerProvider>
+              <Toaster />
+            </ThemeProvider>
+          </QueryProvider>
         </NextIntlClientProvider>
         <GoogleAnalytics />
+        <WebVitals />
       </body>
     </html>
   );

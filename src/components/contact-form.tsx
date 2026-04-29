@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { useAnnounce } from '@/components/announcer';
 import { Button } from '@/components/ui/button';
 import {
   Field,
@@ -46,6 +48,7 @@ async function getResponseJson(response: Response) {
 
 export function ContactForm() {
   const t = useTranslations('Contact');
+  const announce = useAnnounce();
   const [submitState, setSubmitState] = React.useState<SubmitState>('idle');
   const contactFormSchema = getContactFormSchema({
     messages: {
@@ -76,6 +79,8 @@ export function ContactForm() {
 
     if (response === null) {
       setSubmitState('error');
+      toast.error(t('form_submit_error'));
+      announce(t('form_submit_error'));
       return;
     }
 
@@ -84,11 +89,15 @@ export function ContactForm() {
 
     if (!response.ok || !parsedResponse.success || !parsedResponse.data.ok) {
       setSubmitState('error');
+      toast.error(t('form_submit_error'));
+      announce(t('form_submit_error'));
       return;
     }
 
     form.reset(defaultContactFormValues);
     setSubmitState('success');
+    toast.success(t('form_success'));
+    announce(t('form_success'));
   }
 
   return (

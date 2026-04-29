@@ -1,14 +1,14 @@
 export const navLinks = [
   {
     key: 'home' as const,
-    href: '/',
+    href: '/' as const,
   },
   {
     key: 'about' as const,
-    href: '/about/',
+    href: '/about' as const,
   },
   {
     key: 'contact' as const,
-    href: '/contact/',
+    href: '/contact' as const,
   },
 ];

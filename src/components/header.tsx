@@ -76,14 +76,14 @@ export function Header() {
           <Button
             size="sm"
             variant="outline"
-            render={<Link href="/sign-in/" />}
+            render={<Link href="/sign-in" />}
             nativeButton={false}
           >
             {t('sign_in')}
           </Button>
           <Button
             size="sm"
-            render={<Link href="/sign-up/" />}
+            render={<Link href="/sign-up" />}
             nativeButton={false}
           >
             {t('get_started')}

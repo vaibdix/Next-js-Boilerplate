@@ -3,6 +3,8 @@ import type { KnipConfig } from 'knip';
 const config: KnipConfig = {
   ignore: [
     'src/libs/I18n.ts',
+    'src/libs/I18nNavigation.ts',
+    'src/libs/cache.ts',
     'src/types/I18n.ts',
     'src/libs/Logger.ts',
     'src/components/ui/**',

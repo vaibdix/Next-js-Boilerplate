@@ -9,8 +9,6 @@ import type {
   ContactFormResponseMessage,
 } from '@/validations/contact-form';
 
-export const runtime = 'nodejs';
-
 const contactRouteProtection = arcjet.withRule(
   detectBot({
     mode: 'LIVE',

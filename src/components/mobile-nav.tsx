@@ -58,14 +58,14 @@ export function MobileNav() {
               <Button
                 className="w-full"
                 variant="outline"
-                render={<Link href="/sign-in/" />}
+                render={<Link href="/sign-in" />}
                 nativeButton={false}
               >
                 {t('sign_in')}
               </Button>
               <Button
                 className="w-full"
-                render={<Link href="/sign-up/" />}
+                render={<Link href="/sign-up" />}
                 nativeButton={false}
               >
                 {t('get_started')}

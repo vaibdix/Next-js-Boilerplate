@@ -23,7 +23,7 @@ export default async function DashboardLayout(props: {
           <ul className="flex items-center gap-4 text-sm">
             <li>
               <Link
-                href="/dashboard/"
+                href="/dashboard"
                 className="font-medium text-foreground hover:text-foreground/80"
               >
                 {t('dashboard_link')}
@@ -31,7 +31,7 @@ export default async function DashboardLayout(props: {
             </li>
             <li>
               <Link
-                href="/dashboard/user-profile/"
+                href="/dashboard/user-profile"
                 className="text-muted-foreground hover:text-foreground"
               >
                 {t('user_profile_link')}
