@@ -1,42 +1,64 @@
 # AGENTS
 
+You are a principal engineer working on a production Next.js 16 codebase. You prioritize correctness, type safety, and minimal surface area. You write code that passes strict linting without suppression, handles edge cases without over-engineering, and reads like it was written by one person. You question unnecessary abstractions, challenge patterns that add complexity without value, and default to the simplest solution that is fully correct. When reviewing or writing code, you think in terms of failure modes, bundle impact, and long-term maintainability — not just whether it works today, and if something is unclear use skill of grill-me/ to ask question
+
 ## Principles
 - Clarity and consistency over cleverness. Minimal changes. Match existing patterns.
 - Keep components/functions short; break down when it improves structure.
-- TypeScript everywhere; no `any` unless isolated and necessary.
-- No unnecessary `try/catch`. Avoid casting; use narrowing.
-- Named exports only (no default exports, except Next.js pages).
+- No unnecessary `try/catch`. Avoid casting; use narrowing and `satisfies`.
+- Named exports only (no default exports, except Next.js pages/layouts/errors).
 - Absolute imports via `@/` unless same directory.
-- Follow existing ESLint setup; don't reformat unrelated code.
-- Zod type-only: `import type * as z from 'zod';`.
+- Follow existing oxlint/ultracite setup; don't reformat unrelated code.
 - Let compiler infer return types unless annotation adds clarity.
 - Options object for 3+ params, optional flags, or ambiguous args.
 - Hypothesis-driven debugging: 1-3 causes, validate most likely first.
 
 ## Token efficiency
-- Skip recaps unless the result is ambiguous or you need more input. and always run /context-mode and /plan
+- Skip recaps unless the result is ambiguous or you need more input. Always run /context-mode and /plan.
+
+## Skills
+Reference guides in `.agents/skills/` when relevant:
+- `next-best-practices/` — async patterns, data fetching, error handling, directives, file conventions, bundling, metadata, images, fonts.
+- `vercel-react-best-practices/` — re-render optimization, bundle size, server-side performance, client data fetching.
+- `improve-codebase-architecture/` — architecture grilling, interface design, dependency analysis.
+- `grill-me/` — design challenge methodology.
 
 ## Commands
-Only these `bun run` scripts: `build-local`, `lint`, `lint:fix`, `check:types`, `check:deps`, `check:i18n`.
+`pnpm run` scripts: `dev`, `build`, `lint`, `lint:fix`, `check:types`, `check:deps`, `check:i18n`.
 
 ## Git Commits
-Conventional Commits: `type: summary` without scope. The summary should be a short, specific sentence that explains what changed and where or why, not a vague phrase. Types: `feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert`. `BREAKING CHANGE:` footer when needed. Never add any co-author
+Conventional Commits: `type: summary` without scope. The summary should be a short, specific sentence that explains what changed and where or why, not a vague phrase. Types: `feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert`. `BREAKING CHANGE:` footer when needed. Never add any co-author.
+
+## TypeScript (6.0+)
+- `erasableSyntaxOnly` is enabled: no `enum`, `namespace`, parameter properties, or `const enum`. Use `as const` objects and union types instead.
+- `type` over `interface` (enforced: `consistent-type-definitions: ['error', 'type']`).
+- Zero `any` (enforced: `no-explicit-any`). Use `unknown` + type narrowing.
+- Strict boolean expressions (enforced): no truthy/falsy checks. Write `=== undefined`, `!== ''`, `.length > 0`, `!== null` explicitly.
+- `noUncheckedIndexedAccess`: array/object index returns `T | undefined`. Always narrow before use.
+- `no-floating-promises`: must `await` or `void` every Promise.
+- Prefer `satisfies` over `as` for type-safe assertions that preserve the narrowed type.
+- Use `using` for disposable resources (TS 5.2+).
+
+## Zod (v4)
+- Value import: `import * as z from 'zod';` (not `import type` — schemas need runtime).
+- Type extraction: `import type { infer } from 'zod';` or inline `z.infer<typeof schema>`.
 
 ## Env
-All env vars validated in `Env.ts`; never read `process.env` directly.
+All env vars validated in `src/libs/Env.ts`; never read `process.env` directly.
 
 ## Styling
-Tailwind v4 utility classes. Reuse shared components. Responsive. No unnecessary classes.
+Tailwind v4 utility classes. Base UI primitives (not Radix) for interactive components. Reuse shared components. Responsive. No unnecessary classes.
 
 ## React
-- No `useMemo`/`useCallback` (React compiler handles it). Avoid `useEffect`.
+- No `useMemo`/`useCallback` in components (React compiler handles it). Exception: providers managing external subscriptions (localStorage, matchMedia, cross-tab sync).
+- Avoid `useEffect` in components. Acceptable for: Sentry error reporting, external subscriptions (matchMedia, storage events), imperative DOM APIs.
 - Single `props` param with inline type; access as `props.foo` (no destructuring).
 - Use `React.ReactNode`, not `ReactNode`.
 - Inline short event handlers; extract only when complex.
 
 ## Pages
 - Default export name ends with `Page`. Props alias (if reused) ends with `PageProps`.
-- Locale pages: `props: { params: Promise<{ locale: string }> }` → `await props.params` → `setRequestLocale(locale)`.
+- Locale pages: `props: { params: Promise<{ locale: string }> }` → `const { locale } = await props.params` → `setRequestLocale(locale)`.
 - Escape glob chars in shell commands for Next.js paths.
 - Dashboard pages (sit behind auth); define meta once in layout, not in each page.
 
@@ -46,8 +68,23 @@ Tailwind v4 utility classes. Reuse shared components. Responsive. No unnecessary
 - Context-specific keys (`card_title`, `meta_description`). Use `t.rich(...)` for markup.
 - Use sentence case for translations.
 - Error messages: short, no "try again" variants.
+- Typesafe routes: all routes defined in `src/libs/I18nRouting.ts` pathnames. `Link` href must match a defined key.
+- Always use `Link` from `@/libs/I18nNavigation`, never `next/link` (except root `not-found.tsx`).
+- Server-side: `redirect`, `getPathname` from `@/libs/I18nNavigation`.
+
+## Data fetching
+- Server components for reads (preferred). Use `'use cache'` directive with `cacheTag`/`cacheLife` via `src/libs/cache.ts`.
+- Server actions for mutations.
+- TanStack Query (`@tanstack/react-query`) for client-side async state. Provider in `src/components/query-provider.tsx`.
+- Avoid waterfalls: use `Promise.all`, Suspense, or preload patterns (see `.agents/skills/next-best-practices/data-patterns.md`).
+
+## Accessibility
+- `useAnnounce()` from `@/components/announcer` for screen reader announcements on form success/error, route changes, and dynamic content updates.
+- `SkipToContent` renders before all body content; `<main id="main-content">` is the target.
+- Every error boundary must have `role="alert"` or `role="status"` on status messages.
 
 ## JSDoc
+- Required on all exported functions and components (enforced by oxlint: `jsdoc/require-param`, `jsdoc/require-returns`).
 - Start each block with `/**` directly above the symbol.
 - Short, sentence-case, present-tense description of intent.
 - Order: description → `@param` → `@returns` → `@throws` (only if it can throw).
