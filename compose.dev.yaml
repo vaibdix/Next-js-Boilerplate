@@ -1,0 +1,41 @@
+# Docker Compose for local development (no VS Code / devcontainer required).
+#
+# Usage:
+#   cp .env.dev.example .env.local   # fill in Clerk + any optional keys
+#   docker compose -f compose.dev.yaml up --build
+#
+# Then: http://localhost:3000 (Next) and http://localhost:8969 (Spotlight).
+#
+# Source is bind-mounted, so host-side edits trigger HMR inside the container.
+# Hot paths (node_modules / .next / pnpm store) live in named volumes — same
+# strategy as .devcontainer/, so macOS VirtioFS overhead doesn't tank dev perf.
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: nextjs-webalar-starter:dev
+    container_name: nextjs-webalar-dev
+    ports:
+      - "3000:3000"    # next dev
+      - "8969:8969"    # sentry spotlight
+    env_file:
+      - .env.local
+    volumes:
+      # Bind-mount the working tree. `:cached` hints macOS to relax read-after-
+      # write consistency for the source tree (advisory; no-op on Linux).
+      - ./:/app:cached
+      # Named volumes shadow the bind for paths that must NOT leak from the
+      # host (architecture-specific binaries, partial caches) and where
+      # VirtioFS would be slowest.
+      - dev-node-modules:/app/node_modules
+      - dev-next-cache:/app/.next
+      - dev-pnpm-store:/pnpm
+    tty: true
+    stdin_open: true
+
+volumes:
+  dev-node-modules:
+  dev-next-cache:
+  dev-pnpm-store:

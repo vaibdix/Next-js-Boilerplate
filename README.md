@@ -92,6 +92,21 @@ chmod +x .devcontainer/post-create.sh
 git update-index --chmod=+x .devcontainer/post-create.sh
 ```
 
+### Run dev in Docker (without VS Code)
+
+If you'd rather not install Node/pnpm on your host — or want a fully containerized dev environment for onboarding, isolation, or reproducing reports — use the dev compose file:
+
+```shell
+cp .env.dev.example .env.local   # then fill in your Clerk keys
+docker compose -f compose.dev.yaml up --build
+```
+
+Open http://localhost:3000 (Next.js) and http://localhost:8969 (Sentry Spotlight).
+
+Source is bind-mounted, so host-side edits trigger HMR inside the container. `node_modules`, `.next`, and the pnpm store live in named Docker volumes for performance — destroy them with `docker compose -f compose.dev.yaml down -v` when you want a fully clean rebuild.
+
+**On macOS / Windows:** native `pnpm dev` is significantly faster than dev-in-Docker due to VirtioFS filesystem overhead. Reserve this for cases where host parity isn't an option.
+
 ### Getting started with Nix
 
 The project includes a `flake.nix` for a reproducible development environment using [Nix](https://nixos.org/).

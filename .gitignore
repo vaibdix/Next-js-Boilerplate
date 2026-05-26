@@ -35,6 +35,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env.dev
 
 # Sentry Config File
 .env.sentry-build-plugin

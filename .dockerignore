@@ -38,4 +38,6 @@ LICENSE
 
 # Self-reference
 Dockerfile
+Dockerfile.dev
+compose.dev.yaml
 .dockerignore
