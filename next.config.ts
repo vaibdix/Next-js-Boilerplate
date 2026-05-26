@@ -6,6 +6,7 @@ import './src/libs/Env';
 
 // Define the base Next.js configuration
 const baseConfig: NextConfig = {
+  output: 'standalone',
   experimental: {
     useCache: true,
   },
@@ -13,6 +14,8 @@ const baseConfig: NextConfig = {
     position: 'bottom-right',
   },
   images: {
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: 'https',

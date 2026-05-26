@@ -70,7 +70,7 @@ Optional features (easy to add):
 The project includes a `.devcontainer/` configuration for a fully reproducible development environment via [VS Code Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers) or [GitHub Codespaces](https://github.com/features/codespaces).
 
 1. Open the project in VS Code and run **Dev Containers: Reopen in Container** from the command palette, or launch a new Codespace on GitHub.
-2. The container automatically installs Node.js 24, enables pnpm, runs `pnpm install`, and sets up Lefthook git hooks.
+2. The container automatically installs Node.js 24, enables corepack with the pinned pnpm version, runs `pnpm install --frozen-lockfile`, and sets up Lefthook git hooks.
 3. Create a `.env.local` file with your Clerk and other required keys (see [Set up authentication](#set-up-authentication) below).
 4. Start the dev server:
 
@@ -79,6 +79,18 @@ pnpm dev
 ```
 
 Port 3000 (Next.js) opens in your browser automatically. Port 8969 (Sentry Spotlight) is also forwarded.
+
+#### Maintainer note
+
+If you're forking this project, ensure `.devcontainer/post-create.sh` keeps its executable bit in git:
+
+```shell
+# macOS/Linux:
+chmod +x .devcontainer/post-create.sh
+
+# Windows (sets the bit in git directly):
+git update-index --chmod=+x .devcontainer/post-create.sh
+```
 
 ### Getting started with Nix
 
@@ -156,6 +168,10 @@ After defining the environment variables in your GitHub Actions, your localizati
 ```
 
 ### Customization
+
+**For the full SEO / marketing / branding pre-launch checklist, see [`docs/SEO_AND_MARKETING.md`](./docs/SEO_AND_MARKETING.md).**
+
+**For the dependency / supply-chain security workflow (audits, overrides, lefthook gates), see [`docs/DEPENDENCY_SECURITY.md`](./docs/DEPENDENCY_SECURITY.md).**
 
 You can easily configure Next js Boilerplate by searching the entire project for `FIXME:` to make quick customizations. Here are some of the most important files to customize:
 

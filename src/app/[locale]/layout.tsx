@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { AnnouncerProvider } from '@/components/announcer';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { OrganizationJsonLd } from '@/components/json-ld';
 import { QueryProvider } from '@/components/query-provider';
 import { SkipToContent } from '@/components/skip-to-content';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -102,6 +103,16 @@ export default async function RootLayout(props: {
         resolvedTheme === undefined ? undefined : { colorScheme: resolvedTheme }
       }
     >
+      <head>
+        <link
+          rel="preconnect"
+          href="https://storage.efferd.com"
+          crossOrigin=""
+        />
+        <link rel="dns-prefetch" href="https://storage.efferd.com" />
+        <OrganizationJsonLd />
+        <GoogleAnalytics />
+      </head>
       <body>
         <SkipToContent />
         <NextIntlClientProvider>
@@ -116,7 +127,6 @@ export default async function RootLayout(props: {
             </ThemeProvider>
           </QueryProvider>
         </NextIntlClientProvider>
-        <GoogleAnalytics />
         <WebVitals />
       </body>
     </html>

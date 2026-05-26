@@ -1,9 +1,27 @@
-settings:
-  minimumReleaseAge: 1440
-  strictPeerDependencies: true
-  onlyBuiltDependencies:
-    - '@parcel/watcher'
-    - '@sentry/cli'
-    - '@swc/core'
-    - lefthook
-    - sharp
+packages:
+  - .
+
+# Supply chain hardening
+minimumReleaseAge: 10080 # 7 days in minutes
+blockExoticSubdeps: true
+strictPeerDependencies: true
+verifyDepsBeforeRun: error
+
+# Postinstall script allowlist
+allowBuilds:
+  '@clerk/shared': true
+  '@parcel/watcher': true
+  '@sentry/cli': true
+  '@swc/core': true
+  lefthook: true
+  msw: true
+  sharp: true
+
+# Force-patch transitive deps with known CVEs whose direct parents lag.
+# Revisit on each parent-package bump and remove entries that are no longer needed.
+overrides:
+  fast-uri: '>=3.1.1' # GHSA-q3j6-qgpj-74h6 path traversal
+  js-cookie: '>=3.0.6' # GHSA-qjx8-664m-686j prototype pollution (Clerk chain)
+  postcss: '>=8.5.10' # GHSA-qx2v-qp2m-jg93 XSS via </style> escaping (Next transitives)
+  brace-expansion: '>=5.0.6' # GHSA-v6h7-ph6w-fjg7 ReDoS
+  uuid: '>=11.1.1' # GHSA fix in 11.1.1 (Arcjet typeid-js chain)

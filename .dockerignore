@@ -1,0 +1,41 @@
+# Build artifacts
+node_modules
+.next
+.next/cache
+.pnpm-store
+node-compile-cache
+coverage
+.turbo
+.cache
+.fallow
+.DS_Store
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# VCS / IDE
+.git
+.gitignore
+.github
+.vscode
+.idea
+
+# Tooling not needed in image
+.devcontainer
+.agents
+.claude
+.cursor
+scripts
+
+# Docs
+docs
+*.md
+LICENSE
+
+# Local env files — never ship to image
+.env
+.env.*
+!.env.example
+
+# Self-reference
+Dockerfile
+.dockerignore

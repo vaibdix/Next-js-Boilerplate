@@ -2,6 +2,11 @@ import { createEnv } from '@t3-oss/env-nextjs';
 import * as z from 'zod';
 
 export const Env = createEnv({
+  // Treat empty strings as missing — important for Docker build args
+  // (ARG NEXT_PUBLIC_GA_MEASUREMENT_ID="") and .env files with empty
+  // entries. Without this, an unset optional var with a `startsWith()`
+  // refinement throws validation errors.
+  emptyStringAsUndefined: true,
   server: {
     ARCJET_KEY: z.string().startsWith('ajkey_').optional(),
     CLERK_SECRET_KEY: z.string().min(1),

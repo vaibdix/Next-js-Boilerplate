@@ -12,7 +12,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { locale } = await props.params;
 
-  return generatePageMetadata({
+  return await generatePageMetadata({
     locale,
     namespace: 'About',
     path: '/about',

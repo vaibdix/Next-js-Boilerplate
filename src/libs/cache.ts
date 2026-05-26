@@ -6,14 +6,13 @@ import { cacheLife, cacheTag } from 'next/cache';
  * @param fetcher - Async function that returns the data.
  * @returns The fetched data.
  */
-// oxlint-disable-next-line require-await -- async required by 'use cache' directive
 export async function cachedFetch<T>(tag: string, fetcher: () => Promise<T>) {
   'use cache';
 
   cacheTag(tag);
   cacheLife('days');
 
-  return fetcher();
+  return await fetcher();
 }
 
 /**
@@ -22,7 +21,6 @@ export async function cachedFetch<T>(tag: string, fetcher: () => Promise<T>) {
  * @param fetcher - Async function that returns the data.
  * @returns The fetched data.
  */
-// oxlint-disable-next-line require-await -- async required by 'use cache' directive
 export async function cachedFetchShort<T>(
   tag: string,
   fetcher: () => Promise<T>
@@ -36,5 +34,5 @@ export async function cachedFetchShort<T>(
     expire: 3600,
   });
 
-  return fetcher();
+  return await fetcher();
 }

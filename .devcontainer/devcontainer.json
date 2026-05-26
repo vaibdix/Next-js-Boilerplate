@@ -1,26 +1,40 @@
 {
-  "name": "Next.js Boilerplate",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:24",
-
+  "name": "Next.js Webalar Starter",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:24-bookworm",
+  "remoteUser": "node",
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "configureZshAsDefaultShell": true
-    }
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-
   "mounts": [
-    "source=pnpm-store,target=/home/node/.local/share/pnpm/store,type=volume"
+    {
+      "source": "pnpm-store-${devcontainerId}",
+      "target": "/pnpm-store",
+      "type": "volume"
+    },
+    {
+      "source": "node-modules-${devcontainerId}",
+      "target": "${containerWorkspaceFolder}/node_modules",
+      "type": "volume"
+    },
+    {
+      "source": "next-cache-${devcontainerId}",
+      "target": "${containerWorkspaceFolder}/.next",
+      "type": "volume"
+    }
   ],
-
   "forwardPorts": [3000, 8969],
   "portsAttributes": {
     "3000": { "label": "Next.js", "onAutoForward": "openBrowser" },
     "8969": { "label": "Sentry Spotlight", "onAutoForward": "silent" }
   },
-
-  "postCreateCommand": "sudo corepack enable && corepack prepare pnpm@latest --activate && pnpm install && npx lefthook install",
-
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+  "onCreateCommand": "sudo chown -R node:node /pnpm-store ${containerWorkspaceFolder}/node_modules ${containerWorkspaceFolder}/.next",
+  "updateContentCommand": "bash .devcontainer/post-create.sh",
+  "postCreateCommand": "pnpm exec lefthook install",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -40,18 +54,49 @@
           "source.addMissingImports": "explicit",
           "source.fixAll.oxc": "explicit"
         },
-        "oxc.typeAware": true
+        "oxc.typeAware": true,
+        "js/ts.tsdk": "node_modules/typescript/lib",
+        "files.watcherExclude": {
+          "**/.next/**": true,
+          "**/node_modules/**": true,
+          "**/.git/objects/**": true
+        }
       }
     }
   },
-
   "containerEnv": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "PNPM_HOME": "/home/node/.local/share/pnpm",
+    "PNPM_STORE_DIR": "/pnpm-store",
+    "COREPACK_ENABLE_DOWNLOAD_PROMPT": "0",
+    "COREPACK_ENABLE_STRICT": "1",
+    "NPM_CONFIG_FUND": "false",
+    "NPM_CONFIG_AUDIT": "false",
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "DO_NOT_TRACK": "1"
   },
-
   "remoteEnv": {
-    "CLERK_SECRET_KEY": "${localEnv:CLERK_SECRET_KEY}",
-    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "${localEnv:NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}",
-    "FORMSUBMIT_EMAIL": "${localEnv:FORMSUBMIT_EMAIL}"
+    "PATH": "${containerEnv:PATH}:/home/node/.local/bin:${containerEnv:PNPM_HOME}"
+  },
+  "secrets": {
+    "CLERK_SECRET_KEY": {
+      "description": "Clerk server-side secret key.",
+      "documentationUrl": "https://dashboard.clerk.com/last-active?path=api-keys"
+    },
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": {
+      "description": "Clerk publishable key (safe to expose in the client bundle).",
+      "documentationUrl": "https://dashboard.clerk.com/last-active?path=api-keys"
+    },
+    "FORMSUBMIT_EMAIL": {
+      "description": "Recipient email address for the contact form."
+    },
+    "NEXT_PUBLIC_SENTRY_DSN": {
+      "description": "Sentry browser DSN (optional; unset NEXT_PUBLIC_SENTRY_DISABLED to enable).",
+      "documentationUrl": "https://docs.sentry.io/concepts/key-terms/dsn-explainer/"
+    },
+    "ARCJET_KEY": {
+      "description": "Arcjet WAF / bot-protection key, format ajkey_… (optional).",
+      "documentationUrl": "https://docs.arcjet.com/get-started"
+    }
   }
 }

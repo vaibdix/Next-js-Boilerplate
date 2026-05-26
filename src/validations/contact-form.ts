@@ -46,7 +46,7 @@ export function getContactFormSchema(props?: {
         .trim()
         .min(1, messages.phone)
         .max(CONTACT_FORM_FIELD_LIMITS.phone, messages.phone)
-        .regex(/^[+\d().\-\s]{7,}$/, messages.phone),
+        .regex(/^[+\d().\-\s]{7,}$/u, messages.phone),
       message: z
         .string()
         .trim()

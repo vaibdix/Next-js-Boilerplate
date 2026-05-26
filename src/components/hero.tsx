@@ -86,19 +86,19 @@ export async function HeroSection() {
           <Image
             alt="light app screen"
             className="dark:hidden"
+            fetchPriority="high"
             height={720}
-            sizes="100vw"
+            priority
+            sizes="(min-width: 1280px) 1280px, 100vw"
             src="https://storage.efferd.com/screen/dashboard-light.webp"
-            unoptimized
             width={1280}
           />
           <Image
             alt="dark app screen"
             className="hidden dark:block"
             height={720}
-            sizes="100vw"
+            sizes="(min-width: 1280px) 1280px, 100vw"
             src="https://storage.efferd.com/screen/dashboard-dark.webp"
-            unoptimized
             width={1280}
           />
         </div>

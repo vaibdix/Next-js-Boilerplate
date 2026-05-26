@@ -9,6 +9,7 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+.pnpm-store
 
 # testing
 /coverage
@@ -67,3 +68,6 @@ node-compile-cache/
 result
 result-*
 .direnv
+
+# local scanner outputs (e.g. bumblebee inventory snapshots)
+inventory.ndjson

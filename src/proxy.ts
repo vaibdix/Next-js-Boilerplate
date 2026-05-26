@@ -53,10 +53,10 @@ export default async function proxy(
 
   // Clerk keyless mode doesn't work with i18n, this is why we need to run the middleware conditionally
   if (isAuthPage(request) || isProtectedRoute(request)) {
-    return clerkMiddleware(async (auth, req) => {
+    return await clerkMiddleware(async (auth, req) => {
       if (isProtectedRoute(req)) {
         const locale =
-          /(\/.*)\/dashboard/.exec(req.nextUrl.pathname)?.at(1) ?? '';
+          /(\/.*)\/dashboard/u.exec(req.nextUrl.pathname)?.at(1) ?? '';
 
         const signInUrl = new URL(`${locale}/sign-in`, req.url);
 
