@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server';
+
 import { LogoCloud } from '@/components/logo-cloud'; // @efferd/logo-cloud-2
 import { DecorIcon } from '@/components/ui/decor-icon';
 import { FullWidthDivider } from '@/components/ui/full-width-divider';

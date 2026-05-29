@@ -1,6 +1,7 @@
 import { XIcon, MenuIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
+
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { navLinks } from '@/components/nav-links';
 import { Button } from '@/components/ui/button';

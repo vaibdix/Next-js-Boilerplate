@@ -1,5 +1,6 @@
 import Script from 'next/script';
 import type { Organization, WithContext } from 'schema-dts';
+
 import { AppConfig } from '@/utils/AppConfig';
 import { getBaseUrl } from '@/utils/Helpers';
 

@@ -1,4 +1,5 @@
 import { setRequestLocale } from 'next-intl/server';
+
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { cn } from '@/lib/utils';

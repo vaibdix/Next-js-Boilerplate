@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
+
 import { ContactSection } from '@/components/contact-section';
 import { generatePageMetadata } from '@/utils/Metadata';
 

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import { DecorIcon } from '@/components/ui/decor-icon';
 import { cn } from '@/lib/utils';
 

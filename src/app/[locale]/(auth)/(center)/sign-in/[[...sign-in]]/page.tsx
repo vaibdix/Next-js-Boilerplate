@@ -1,6 +1,7 @@
 import { SignIn } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
+
 import { getI18nPath } from '@/utils/Helpers';
 import { generatePageMetadata } from '@/utils/Metadata';
 

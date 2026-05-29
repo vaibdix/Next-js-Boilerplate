@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
+
 import { Integrations } from '@/components/integrations';
 import { generatePageMetadata } from '@/utils/Metadata';
 

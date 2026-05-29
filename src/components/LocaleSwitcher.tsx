@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import type { ChangeEventHandler } from 'react';
+
 import { usePathname, useRouter } from '@/libs/I18nNavigation';
 import { routing } from '@/libs/I18nRouting';
 

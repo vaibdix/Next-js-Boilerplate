@@ -3,6 +3,7 @@
 import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
+
 import { Button } from '@/components/ui/button';
 
 /**

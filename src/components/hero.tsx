@@ -1,6 +1,7 @@
 import { ArrowRightIcon, PhoneCallIcon } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
+
 import { Button } from '@/components/ui/button';
 import { DecorIcon } from '@/components/ui/decor-icon';
 import { FullWidthDivider } from '@/components/ui/full-width-divider';

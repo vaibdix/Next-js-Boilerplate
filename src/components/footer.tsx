@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+
 import { cn } from '@/lib/utils';
 
 type LinksGroupProps = {

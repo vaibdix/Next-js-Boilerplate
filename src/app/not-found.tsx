@@ -1,6 +1,7 @@
 import { CompassIcon, HomeIcon } from 'lucide-react';
 import { Manrope } from 'next/font/google';
 import Link from 'next/link';
+
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import { buttonVariants } from '@/components/ui/button';
 import {

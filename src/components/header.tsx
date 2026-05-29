@@ -2,6 +2,7 @@
 
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Logo } from '@/components/logo';
 import { MobileNav } from '@/components/mobile-nav';

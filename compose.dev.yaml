@@ -18,8 +18,8 @@ services:
     image: nextjs-webalar-starter:dev
     container_name: nextjs-webalar-dev
     ports:
-      - "3000:3000"    # next dev
-      - "8969:8969"    # sentry spotlight
+      - '3000:3000' # next dev
+      - '8969:8969' # sentry spotlight
     env_file:
       - .env.local
     volumes:

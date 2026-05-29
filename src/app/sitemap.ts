@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+
 import { getPathname } from '@/libs/I18nNavigation';
 import { routing } from '@/libs/I18nRouting';
 import { getBaseUrl } from '@/utils/Helpers';

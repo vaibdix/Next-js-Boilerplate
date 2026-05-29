@@ -1,6 +1,7 @@
 import { detectBot } from '@arcjet/next';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+
 import arcjet from '@/libs/Arcjet';
 import { Env } from '@/libs/Env';
 import { contactFormSchema } from '@/validations/contact-form';

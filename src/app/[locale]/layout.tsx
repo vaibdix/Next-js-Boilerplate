@@ -4,6 +4,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { Manrope } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
+
 import { AnnouncerProvider } from '@/components/announcer';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import { OrganizationJsonLd } from '@/components/json-ld';

@@ -1,6 +1,7 @@
 import { SignOutButton } from '@clerk/nextjs';
 import { LogOutIcon } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+
 import { LocaleSwitcher } from '@/components/LocaleSwitcher';
 import { Button } from '@/components/ui/button';
 import { Link } from '@/libs/I18nNavigation';

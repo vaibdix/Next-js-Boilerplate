@@ -1,5 +1,6 @@
 import { MailIcon, PhoneIcon } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+
 import { ContactForm } from '@/components/contact-form';
 import { cn } from '@/lib/utils';
 

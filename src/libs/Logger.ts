@@ -6,6 +6,7 @@ import {
   getJsonLinesFormatter,
   getLogger,
 } from '@logtape/logtape';
+
 import { Env } from './Env';
 
 const betterStackSink: AsyncSink = async (record) => {

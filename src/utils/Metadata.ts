@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+
 import { routing } from '@/libs/I18nRouting';
 import type messages from '@/locales/en.json';
 import { AppConfig } from '@/utils/AppConfig';

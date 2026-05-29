@@ -1,6 +1,7 @@
 'use client';
 
 import { useReportWebVitals } from 'next/web-vitals';
+
 import { trackEvent } from '@/libs/Analytics';
 
 /**

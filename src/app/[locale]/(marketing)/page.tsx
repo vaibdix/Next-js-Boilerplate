@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
+
 import { HeroSection } from '@/components/hero';
 import { LogosSection } from '@/components/logos-section';
 import { generatePageMetadata } from '@/utils/Metadata';

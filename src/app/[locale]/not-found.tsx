@@ -1,5 +1,6 @@
 import { CompassIcon, HomeIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+
 import { buttonVariants } from '@/components/ui/button';
 import {
   Empty,
