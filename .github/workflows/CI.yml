@@ -31,10 +31,10 @@ jobs:
           path: |
             .next/cache
           # Generate a new cache whenever packages or source files change.
-          key: nextjs-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('src/**') }}
+          key: nextjs-${{ matrix.node-version }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('src/**') }}
 
       - name: Build Next.js
-        run: npm run build
+        run: pnpm run build
         env:
           NEXT_PUBLIC_SENTRY_DISABLED: 'true' # Only upload Sentry source maps in deployment
           NEXT_PUBLIC_APP_URL: http://localhost:3008
@@ -71,19 +71,19 @@ jobs:
 
       - if: github.event_name == 'pull_request'
         name: Validate all commits from PR
-        run: npx commitlint --from $BASE_SHA --to $HEAD_SHA --verbose
+        run: pnpm exec commitlint --from $BASE_SHA --to $HEAD_SHA --verbose
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
       - name: Linter
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Check dependencies
-        run: npm run check:deps
+        run: pnpm run check:deps
 
       - name: I18n check
-        run: npm run check:i18n
+        run: pnpm run check:i18n
 
   synchronize-with-crowdin:
     name: GitHub PR synchronize with Crowdin
