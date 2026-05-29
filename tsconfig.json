@@ -8,6 +8,8 @@
     "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "experimentalDecorators": false,
     // ======================================================================
     // Module System (TS 6.0+)
     // Enforces modern module patterns aligned with TS 6.0 defaults
@@ -47,6 +49,8 @@
     "types": ["node"],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "pretty": true,
+    "noErrorTruncation": true,
     // ======================================================================
     // Project Structure
     // Configure import paths and module resolution
@@ -67,7 +71,8 @@
         "name": "next"
       }
     ],
-    "allowJs": true
+    "allowJs": true,
+    "checkJs": true
   },
   "exclude": ["node_modules"],
   "include": [

@@ -8,12 +8,12 @@ import { Button } from '@/components/ui/button';
 
 /**
  * Error boundary for authenticated routes (dashboard, user profile).
- * @param props - Error and reset callback from Next.js.
- * @returns A friendly error UI with a retry button.
+ * @param props - Error and `unstable_retry` callback from Next.js 16.2+.
+ * @returns A friendly error UI with a retry button that re-fetches the segment.
  */
 export default function AuthError(props: {
   error: Error & { digest?: string };
-  reset: () => void;
+  unstable_retry: () => void;
 }) {
   const t = useTranslations('Error');
 
@@ -32,7 +32,13 @@ export default function AuthError(props: {
           {t('error_id', { id: props.error.digest })}
         </p>
       )}
-      <Button onClick={props.reset}>{t('retry')}</Button>
+      <Button
+        onClick={() => {
+          props.unstable_retry();
+        }}
+      >
+        {t('retry')}
+      </Button>
     </div>
   );
 }

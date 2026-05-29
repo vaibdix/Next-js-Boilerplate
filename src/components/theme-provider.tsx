@@ -8,6 +8,7 @@ import {
   MEDIA_QUERY,
   resolveTheme,
   setThemeCookie,
+  THEME_COOKIE_NAME,
   THEME_STORAGE_KEY,
 } from '@/lib/theme';
 import type { Theme } from '@/lib/theme';
@@ -76,12 +77,32 @@ function ThemeHotkey() {
 }
 
 function ThemeProvider(props: {
-  initialTheme: Theme;
+  initialTheme?: Theme;
   children: React.ReactNode;
 }) {
-  const [theme, setThemeState] = React.useState<Theme>(props.initialTheme);
+  // Read the theme cookie client-side so the React state matches what
+  // `ThemeScript` applied to `<html>` pre-paint. The layout no longer reads
+  // cookies (would block prerendering under Cache Components — see
+  // `@/components/theme-script`).
+  const initial = React.useMemo<Theme>(() => {
+    if (props.initialTheme) {
+      return props.initialTheme;
+    }
+
+    if (typeof document === 'undefined') {
+      return 'system';
+    }
+
+    const pattern = new RegExp(`(?:^|;\\s*)${THEME_COOKIE_NAME}=([^;]+)`, 'u');
+    const match = pattern.exec(document.cookie);
+    const value = match?.[1];
+
+    return isTheme(value) ? value : 'system';
+  }, [props.initialTheme]);
+
+  const [theme, setThemeState] = React.useState<Theme>(initial);
   const [resolved, setResolved] = React.useState<'light' | 'dark'>(() =>
-    resolveTheme(props.initialTheme)
+    resolveTheme(initial)
   );
 
   const setTheme = React.useCallback((next: Theme) => {

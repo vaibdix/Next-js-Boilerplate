@@ -32,14 +32,9 @@ export function AnnouncerProvider(props: { children: React.ReactNode }) {
   return (
     <AnnouncerContext.Provider value={announce}>
       {props.children}
-      <div
-        aria-live="polite"
-        aria-atomic="true"
-        role="status"
-        className="sr-only"
-      >
+      <output aria-live="polite" aria-atomic="true" className="sr-only">
         {message}
-      </div>
+      </output>
     </AnnouncerContext.Provider>
   );
 }

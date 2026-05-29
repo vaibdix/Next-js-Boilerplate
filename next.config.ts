@@ -8,8 +8,9 @@ import './src/libs/Env';
 // Define the base Next.js configuration
 const baseConfig: NextConfig = {
   output: 'standalone',
+  cacheComponents: true,
   experimental: {
-    useCache: true,
+    globalNotFound: true,
   },
   devIndicators: {
     position: 'bottom-right',

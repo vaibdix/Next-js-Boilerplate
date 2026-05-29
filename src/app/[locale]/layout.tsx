@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { Manrope } from 'next/font/google';
-import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { AnnouncerProvider } from '@/components/announcer';
@@ -11,10 +10,10 @@ import { OrganizationJsonLd } from '@/components/json-ld';
 import { QueryProvider } from '@/components/query-provider';
 import { SkipToContent } from '@/components/skip-to-content';
 import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeScript } from '@/components/theme-script';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { WebVitals } from '@/components/web-vitals';
-import { isTheme, THEME_COOKIE_NAME } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import { routing } from '@/libs/I18nRouting';
 import { getBaseUrl } from '@/utils/Helpers';
@@ -76,13 +75,6 @@ export default async function RootLayout(props: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await props.params;
-  const cookieStore = await cookies();
-  const cookieTheme = cookieStore.get(THEME_COOKIE_NAME)?.value;
-  const initialTheme = isTheme(cookieTheme) ? cookieTheme : 'system';
-  const resolvedTheme =
-    initialTheme === 'light' || initialTheme === 'dark'
-      ? initialTheme
-      : undefined;
 
   if (!hasLocale(routing.locales, locale)) {
     notFound();
@@ -94,15 +86,7 @@ export default async function RootLayout(props: {
     <html
       lang={locale}
       suppressHydrationWarning
-      className={cn(
-        'antialiased',
-        manrope.variable,
-        resolvedTheme === 'dark' && 'dark',
-        resolvedTheme === 'light' && 'light'
-      )}
-      style={
-        resolvedTheme === undefined ? undefined : { colorScheme: resolvedTheme }
-      }
+      className={cn('antialiased', manrope.variable)}
     >
       <head>
         <link
@@ -113,12 +97,13 @@ export default async function RootLayout(props: {
         <link rel="dns-prefetch" href="https://storage.efferd.com" />
         <OrganizationJsonLd />
         <GoogleAnalytics />
+        <ThemeScript />
       </head>
       <body>
         <SkipToContent />
         <NextIntlClientProvider>
           <QueryProvider>
-            <ThemeProvider initialTheme={initialTheme}>
+            <ThemeProvider>
               <AnnouncerProvider>
                 <TooltipProvider>
                   <main id="main-content">{props.children}</main>

@@ -1,6 +1,8 @@
 {
   "recommendations": [
     "oxc.oxc-vscode",
+    "TypeScriptTeam.native-preview",
+    "stylelint.vscode-stylelint",
     "mikestead.dotenv",
     "bradlc.vscode-tailwindcss",
     "vitest.explorer",

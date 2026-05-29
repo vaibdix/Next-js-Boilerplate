@@ -3,6 +3,7 @@
 You are a principal engineer working on a production Next.js 16 codebase. You prioritize correctness, type safety, and minimal surface area. You write code that passes strict linting without suppression, handles edge cases without over-engineering, and reads like it was written by one person. You question unnecessary abstractions, challenge patterns that add complexity without value, and default to the simplest solution that is fully correct. When reviewing or writing code, you think in terms of failure modes, bundle impact, and long-term maintainability — not just whether it works today, and if something is unclear use skill of grill-me/ to ask question
 
 ## Principles
+
 - Clarity and consistency over cleverness. Minimal changes. Match existing patterns.
 - Keep components/functions short; break down when it improves structure.
 - No unnecessary `try/catch`. Avoid casting; use narrowing and `satisfies`.
@@ -12,24 +13,33 @@ You are a principal engineer working on a production Next.js 16 codebase. You pr
 - Let compiler infer return types unless annotation adds clarity.
 - Options object for 3+ params, optional flags, or ambiguous args.
 - Hypothesis-driven debugging: 1-3 causes, validate most likely first.
+- Always make use of /context7 when dealing with newer versions of libraries.
+- Make use of websearch when not sure of latest implementation of topic.
 
 ## Token efficiency
+
 - Skip recaps unless the result is ambiguous or you need more input. Always run /context-mode and /plan.
 
 ## Skills
 Reference guides in `.agents/skills/` when relevant:
+
 - `next-best-practices/` — async patterns, data fetching, error handling, directives, file conventions, bundling, metadata, images, fonts.
 - `vercel-react-best-practices/` — re-render optimization, bundle size, server-side performance, client data fetching.
 - `improve-codebase-architecture/` — architecture grilling, interface design, dependency analysis.
 - `grill-me/` — design challenge methodology.
+- `grill-with-docs/` — plan-challenging session that updates CONTEXT.md and ADRs inline as decisions crystallise.
+- `handoff/` — compact the current conversation into a handoff doc for a fresh agent.
 
 ## Commands
-`pnpm run` scripts: `dev`, `build`, `lint`, `lint:fix`, `check:types`, `check:deps`, `check:i18n`.
+
+`pnpm run` scripts: `dev`, `build`, `lint`, `lint:fix`, `lint:css`, `lint:css:fix`, `check:types` (runs `tsgo`), `check:deps`, `check:i18n`.
 
 ## Git Commits
+
 Conventional Commits: `type: summary` without scope. The summary should be a short, specific sentence that explains what changed and where or why, not a vague phrase. Types: `feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert`. `BREAKING CHANGE:` footer when needed. Never add any co-author.
 
-## TypeScript (6.0+)
+## TypeScript (6.0 syntax, tsgo typecheck)
+
 - `erasableSyntaxOnly` is enabled: no `enum`, `namespace`, parameter properties, or `const enum`. Use `as const` objects and union types instead.
 - `type` over `interface` (enforced: `consistent-type-definitions: ['error', 'type']`).
 - Zero `any` (enforced: `no-explicit-any`). Use `unknown` + type narrowing.
@@ -39,17 +49,47 @@ Conventional Commits: `type: summary` without scope. The summary should be a sho
 - Prefer `satisfies` over `as` for type-safe assertions that preserve the narrowed type.
 - Use `using` for disposable resources (TS 5.2+).
 
+## tsgo (TypeScript 7 native typechecker)
+
+This project type-checks with `tsgo`, the Go-based TypeScript 7 compiler
+shipped via `@typescript/native-preview`. Classic `tsc` (TS 6.0.3) stays
+installed so tooling that depends on the Strada API still resolves it.
+
+Behavior parity: `tsgo` accepts every TS 6.0 file and reports the same
+diagnostics — only faster (~9× on this codebase, 414 ms vs 3,728 ms cold).
+Write code targeting TS 6 semantics; nothing changes at the language level.
+
+Things to know when writing code:
+
+- **No decorator emit.** `@dec class Foo {}` syntax isn't compiled. Your
+  `erasableSyntaxOnly` already blocks decorators — don't introduce them.
+- **No `@enum` / `@constructor` JSDoc.** tsgo's JS checker drops these
+  legacy tags. Use real TS types or `as const` objects instead.
+- **TypeScript Compiler API (Strada) isn't exposed.** Tools that do
+  `import * as ts from 'typescript'` (ts-morph, ttypescript, ts-patch,
+  custom transformers) keep reading the classic `tsc` install — don't
+  migrate them to `@typescript/native-preview`.
+
+Run via `pnpm run check:types`. Classic `tsc` is still installed at
+`./node_modules/.bin/tsc` if you need watch mode, emit, or the Compiler API.
+
+References: [TS 7.0 Beta announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0-beta/), [Progress on TypeScript 7 — Dec 2025](https://devblogs.microsoft.com/typescript/progress-on-typescript-7-december-2025/).
+
 ## Zod (v4)
+
 - Value import: `import * as z from 'zod';` (not `import type` — schemas need runtime).
 - Type extraction: `import type { infer } from 'zod';` or inline `z.infer<typeof schema>`.
 
 ## Env
+
 All env vars validated in `src/libs/Env.ts`; never read `process.env` directly.
 
 ## Styling
+
 Tailwind v4 utility classes. Base UI primitives (not Radix) for interactive components. Reuse shared components. Responsive. No unnecessary classes.
 
 ## React
+
 - No `useMemo`/`useCallback` in components (React compiler handles it). Exception: providers managing external subscriptions (localStorage, matchMedia, cross-tab sync).
 - Avoid `useEffect` in components. Acceptable for: Sentry error reporting, external subscriptions (matchMedia, storage events), imperative DOM APIs.
 - Single `props` param with inline type; access as `props.foo` (no destructuring).
@@ -57,12 +97,14 @@ Tailwind v4 utility classes. Base UI primitives (not Radix) for interactive comp
 - Inline short event handlers; extract only when complex.
 
 ## Pages
+
 - Default export name ends with `Page`. Props alias (if reused) ends with `PageProps`.
 - Locale pages: `props: { params: Promise<{ locale: string }> }` → `const { locale } = await props.params` → `setRequestLocale(locale)`.
 - Escape glob chars in shell commands for Next.js paths.
 - Dashboard pages (sit behind auth); define meta once in layout, not in each page.
 
 ## i18n (next-intl)
+
 - Never hard-code user-visible strings. Page namespaces end with `Page`.
 - Server: `getTranslations`; Client: `useTranslations`.
 - Context-specific keys (`card_title`, `meta_description`). Use `t.rich(...)` for markup.
@@ -73,21 +115,88 @@ Tailwind v4 utility classes. Base UI primitives (not Radix) for interactive comp
 - Server-side: `redirect`, `getPathname` from `@/libs/I18nNavigation`.
 
 ## Data fetching
-- Server components for reads (preferred). Use `'use cache'` directive with `cacheTag`/`cacheLife` via `src/libs/cache.ts`.
+
+- Server components for reads (preferred). Use `'use cache'` via `src/libs/cache.ts` (`cachedJson<T>(tag, url)` / `cachedJsonShort<T>(tag, url)`).
+- Never pass functions or closures as arguments to a `'use cache'` scope — Next.js 16 only allows serializable args (strings, numbers, plain objects, Dates/Maps/Sets/TypedArrays). Pass URLs + primitive params; the helpers in `cache.ts` show the shape.
 - Server actions for mutations.
 - TanStack Query (`@tanstack/react-query`) for client-side async state. Provider in `src/components/query-provider.tsx`.
 - Avoid waterfalls: use `Promise.all`, Suspense, or preload patterns (see `.agents/skills/next-best-practices/data-patterns.md`).
 
 ## Accessibility
+
 - `useAnnounce()` from `@/components/announcer` for screen reader announcements on form success/error, route changes, and dynamic content updates.
 - `SkipToContent` renders before all body content; `<main id="main-content">` is the target.
 - Every error boundary must have `role="alert"` or `role="status"` on status messages.
 
 ## JSDoc
+
 - Required on all exported functions and components (enforced by oxlint: `jsdoc/require-param`, `jsdoc/require-returns`).
 - Start each block with `/**` directly above the symbol.
 - Short, sentence-case, present-tense description of intent.
 - Order: description → `@param` → `@returns` → `@throws` (only if it can throw).
+
+## Code readability
+
+- When adding non-trivial helper functions, prefer a short comment directly
+  above the function declaration that explains, in plain language, what the
+  helper does and why it exists.
+- Write these comments as if the reader is new to the codepath. Avoid vague
+  shorthand like "snapshot" unless you immediately explain what data is being
+  captured or derived.
+- Prefer function-level comments over a lot of inline comments. Use inline
+  comments only when a specific step inside the function is still non-obvious.
+- Keep comments concrete and behavior-focused. Good comments usually explain
+  what data is being transformed, what invariant is being checked, or what the
+  helper is protecting against.
+- After changing boolean logic or invalidation paths, simplify the final control
+  flow before calling the work done. If code is already inside `if (foo)`, don't
+  keep `|| foo` in assignments inside that block. Prefer direct values that make
+  the invariant obvious.
+
+## Performance
+
+**CRITICAL: Avoid nested loops and O(n²) operations.**
+
+- When iterating over collections, calculate expensive values ONCE before the
+  loop, not inside it
+- Never nest loops unless absolutely necessary - it's expensive and usually
+  there's a better way
+- If you need to check conditions on remaining elements, scan backwards once
+  upfront instead of checking inside the main loop
+
+Example of BAD code:
+
+```typescript
+for (let i = 0; i < items.length; i++) {
+  // DON'T DO THIS - nested loop on every iteration
+  let hasMoreItems = false;
+  for (let j = i + 1; j < items.length; j++) {
+    if (items[j].someCondition) {
+      hasMoreItems = true;
+      break;
+    }
+  }
+}
+```
+
+Example of GOOD code:
+
+```typescript
+// Calculate once upfront
+let lastMeaningfulIndex = items.length - 1;
+for (let i = items.length - 1; i >= 0; i--) {
+  if (items[i].someCondition) {
+    lastMeaningfulIndex = i;
+    break;
+  }
+}
+
+// Now iterate efficiently
+for (let i = 0; i <= lastMeaningfulIndex; i++) {
+  const isLast = i === lastMeaningfulIndex;
+  // ...
+}
+```
 
 # context-mode — MANDATORY routing rules
 
@@ -96,26 +205,38 @@ You have context-mode MCP tools available. These rules are NOT optional — they
 ## BLOCKED commands — do NOT attempt these
 
 ### curl / wget — BLOCKED
+
 Any Bash command containing `curl` or `wget` is intercepted and replaced with an error message. Do NOT retry.
+
 Instead use:
+
 - `ctx_fetch_and_index(url, source)` to fetch and index web pages
 - `ctx_execute(language: "javascript", code: "const r = await fetch(...)")` to run HTTP calls in sandbox
 
 ### Inline HTTP — BLOCKED
+
 Any Bash command containing `fetch('http`, `requests.get(`, `requests.post(`, `http.get(`, or `http.request(` is intercepted and replaced with an error message. Do NOT retry with Bash.
+
 Instead use:
+
 - `ctx_execute(language, code)` to run HTTP calls in sandbox — only stdout enters context
 
 ### WebFetch — BLOCKED
+
 WebFetch calls are denied entirely. The URL is extracted and you are told to use `ctx_fetch_and_index` instead.
+
 Instead use:
+
 - `ctx_fetch_and_index(url, source)` then `ctx_search(queries)` to query the indexed content
 
 ## REDIRECTED tools — use sandbox equivalents
 
 ### Bash (>20 lines output)
+
 Bash is ONLY for: `git`, `mkdir`, `rm`, `mv`, `cd`, `ls`, `npm install`, `pip install`, and other short-output commands.
+
 For everything else, use:
+
 - `ctx_batch_execute(commands, queries)` — run multiple commands + search in ONE call
 - `ctx_execute(language: "shell", code: "...")` — run in sandbox, only stdout enters context
 
@@ -141,6 +262,7 @@ When spawning subagents (Agent/Task tool), the routing block is automatically in
 ## Output constraints
 
 - Keep responses under 500 words.
+
 - Write artifacts (code, configs, PRDs) to FILES — never return them as inline text. Return only: file path + 1-line description.
 - When indexing content, use descriptive source labels so others can `ctx_search(source: "label")` later.
 

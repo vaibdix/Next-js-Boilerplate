@@ -1,7 +1,25 @@
 import { ArrowRightIcon } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
+import { cacheLife } from 'next/cache';
 
 import { cn } from '@/lib/utils';
+
+/**
+ * Cache the current year so reading `new Date()` doesn't break prerendering
+ * under Next.js 16's Cache Components. Regenerated at most once per week,
+ * which is fine for a copyright footer that only changes once a year.
+ *
+ * The function must be `async` because the `'use cache'` directive only
+ * works on async functions, even when the body itself does no awaiting —
+ * see https://nextjs.org/docs/app/api-reference/directives/use-cache.
+ * @returns The current calendar year.
+ */
+// oxlint-disable-next-line eslint/require-await -- 'use cache' requires async
+async function getCurrentYear() {
+  'use cache';
+  cacheLife('weeks');
+  return new Date().getFullYear();
+}
 
 type LinksGroupProps = {
   title: string;
@@ -53,6 +71,7 @@ function SocialCard({
 
 export async function Footer() {
   const t = await getTranslations('Footer');
+  const year = await getCurrentYear();
 
   return (
     <footer
@@ -120,7 +139,7 @@ export async function Footer() {
       </div>
       <div className="flex justify-center border-t p-3">
         <p className="text-xs text-muted-foreground">
-          {t('copyright', { year: new Date().getFullYear() })}
+          {t('copyright', { year })}
         </p>
       </div>
     </footer>

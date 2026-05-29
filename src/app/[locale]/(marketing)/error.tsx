@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 export default function MarketingError(props: {
   error: Error & { digest?: string };
-  reset: () => void;
+  unstable_retry: () => void;
 }) {
   const t = useTranslations('Error');
 
@@ -21,7 +21,13 @@ export default function MarketingError(props: {
           {t('error_id', { id: props.error.digest })}
         </p>
       )}
-      <Button onClick={props.reset}>{t('retry')}</Button>
+      <Button
+        onClick={() => {
+          props.unstable_retry();
+        }}
+      >
+        {t('retry')}
+      </Button>
     </div>
   );
 }

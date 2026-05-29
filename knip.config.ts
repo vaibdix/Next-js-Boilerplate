@@ -8,6 +8,8 @@ const config: KnipConfig = {
     'src/libs/Logger.ts',
     'src/components/ui/**',
     'src/components/logo.tsx',
+    // Shipped for future SVG sprite pipeline (Pierre-style); not yet wired in.
+    'svgo.config.js',
   ],
 
   ignoreDependencies: [
@@ -25,7 +27,7 @@ const config: KnipConfig = {
 
   // tsx is invoked via `pnpm exec tsx` from lefthook and the optimize-images
   // script — present in the pnpm store but not declared as a top-level devDep.
-  ignoreBinaries: ['dotenv', 'production', 'tsx'],
+  ignoreBinaries: ['tsx'],
 
   compilers: {
     css: (text: string) => [...text.matchAll(/(?<=@)import[^;]+/gu)].join('\n'),

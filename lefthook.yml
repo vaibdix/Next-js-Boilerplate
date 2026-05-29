@@ -19,6 +19,11 @@ pre-commit:
         - '**/*.css'
       stage_fixed: true
 
+    - name: stylelint
+      run: pnpm exec stylelint --fix {staged_files}
+      glob: '**/*.css'
+      stage_fixed: true
+
     - name: optimize-images
       run: pnpm exec tsx scripts/optimize-images.ts {staged_files}
       glob:

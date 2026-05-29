@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+
 import { useAnnounce } from '@/components/announcer';
 import { Button } from '@/components/ui/button';
 import {
@@ -184,9 +185,9 @@ export function ContactForm() {
         </p>
       )}
       {submitState === 'success' && (
-        <p className="mt-6 text-sm text-muted-foreground" role="status">
+        <output className="mt-6 block text-sm text-muted-foreground">
           {t('form_success')}
-        </p>
+        </output>
       )}
       <Button
         className="mt-8 w-full"
