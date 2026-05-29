@@ -21,6 +21,12 @@ ENV PNPM_HOME=/pnpm \
     PATH=/pnpm:$PATH \
     COREPACK_ENABLE_STRICT=1 \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
+    # Pin pnpm's store dir so interactive `pnpm add` at runtime sees the
+    # same store path that `pnpm install` used during build. pnpm 11 only
+    # reads behavior config from pnpm-workspace.yaml or env vars (not .npmrc);
+    # using an env var keeps this Docker-only and doesn't break host dev.
+    # NOTE: pnpm 11 stopped reading `NPM_CONFIG_*` — must use `PNPM_CONFIG_*`.
+    PNPM_CONFIG_STORE_DIR=/pnpm/store \
     NEXT_TELEMETRY_DISABLED=1 \
     DO_NOT_TRACK=1 \
     NPM_CONFIG_FUND=false \
@@ -48,8 +54,12 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # pnpm-workspace.yaml provides all the supply-chain hardening (minimumReleaseAge,
 # blockExoticSubdeps, strictPeerDependencies, allowBuilds). Frozen lockfile
 # blocks injected deps; --prefer-offline reduces registry exposure.
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
-    pnpm install --frozen-lockfile --prefer-offline
+#
+# No BuildKit cache mount on this RUN — we WANT the populated store to land
+# in the image at /pnpm/store, so the `dev-pnpm-store` named volume gets
+# seeded from it on first boot. Otherwise the volume stays empty and
+# runtime `pnpm add` errors with ERR_PNPM_UNEXPECTED_STORE.
+RUN pnpm install --frozen-lockfile --prefer-offline
 
 # Source tree is provided at runtime via bind-mount from compose — do not COPY.
 
