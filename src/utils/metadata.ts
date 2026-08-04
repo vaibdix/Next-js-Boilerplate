@@ -1,23 +1,19 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
-import { routing } from '@/libs/I18nRouting';
+import { routing } from '@/libs/i18n-routing';
 import type messages from '@/locales/en.json';
-import { AppConfig } from '@/utils/AppConfig';
-import { getBaseUrl, getI18nPath } from '@/utils/Helpers';
+import { AppConfig } from '@/utils/app-config';
+import { getBaseUrl } from '@/utils/get-base-url';
+import { getI18nPath } from '@/utils/get-i18n-path';
 
-type PageMetadataOptions = {
+interface PageMetadataOptions {
   locale: string;
   namespace: keyof typeof messages;
   path: string;
   params?: Record<string, string>;
-};
+}
 
-/**
- * Generates page metadata with OpenGraph, Twitter, and alternate links.
- * @param options - The locale, namespace, path, and optional interpolation params.
- * @returns Fully populated metadata for the page.
- */
 export const generatePageMetadata = async (
   options: PageMetadataOptions
 ): Promise<Metadata> => {

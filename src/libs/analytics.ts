@@ -1,30 +1,29 @@
-import { Env } from '@/libs/Env';
+import { Env } from '@/libs/env';
 
 const SENSITIVE_PATH_RE = /\/dashboard(\/|$)|\/user-profile(\/|$)/u;
 
-/**
- * Sends a gtag event unless the current path matches a sensitive route.
- * @param event - The gtag event name.
- * @param params - Event parameters forwarded to gtag.
- */
-export function trackEvent(
-  event: string,
-  params: Record<string, unknown> = {}
-): void {
+const canTrackAnalytics = () => {
   if (typeof window === 'undefined') {
-    return;
+    return false;
   }
 
   if (SENSITIVE_PATH_RE.test(window.location.pathname)) {
-    return;
+    return false;
   }
 
-  if (
-    Env.NEXT_PUBLIC_GA_MEASUREMENT_ID === undefined ||
-    Env.NEXT_PUBLIC_GA_MEASUREMENT_ID === ''
-  ) {
+  return (
+    Env.NEXT_PUBLIC_GA_MEASUREMENT_ID !== undefined &&
+    Env.NEXT_PUBLIC_GA_MEASUREMENT_ID !== ''
+  );
+};
+
+export const trackEvent = (
+  event: string,
+  params: Record<string, unknown> = {}
+): void => {
+  if (!canTrackAnalytics()) {
     return;
   }
 
   window.gtag?.('event', event, params);
-}
+};

@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-import { Hello } from '@/components/Hello';
+import { Hello } from '@/components/hello';
 
-type DashboardPageProps = {
+interface DashboardPageProps {
   params: Promise<{ locale: string }>;
-};
+}
 
-export async function generateMetadata(
+export const generateMetadata = async (
   props: DashboardPageProps
-): Promise<Metadata> {
+): Promise<Metadata> => {
   const { locale } = await props.params;
   const t = await getTranslations({
     locale,
@@ -21,9 +21,9 @@ export async function generateMetadata(
     description: t('meta_description'),
     robots: { index: false, follow: false },
   };
-}
+};
 
-export default async function DashboardPage(props: DashboardPageProps) {
+const DashboardPage = async (props: DashboardPageProps) => {
   const { locale } = await props.params;
   setRequestLocale(locale);
 
@@ -32,4 +32,6 @@ export default async function DashboardPage(props: DashboardPageProps) {
       <Hello />
     </div>
   );
-}
+};
+
+export default DashboardPage;

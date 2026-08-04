@@ -1,17 +1,19 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import { setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
 
-import { routing } from '@/libs/I18nRouting';
-import { ClerkLocalizations } from '@/utils/AppConfig';
+import { routing } from '@/libs/i18n-routing';
+import { ClerkLocalizations } from '@/utils/clerk-localizations';
 
-export default async function AuthLayout(props: {
+interface AuthLayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
-}) {
+}
+
+const AuthContent = async (props: AuthLayoutProps) => {
   const { locale } = await props.params;
   setRequestLocale(locale);
 
-  // oxlint-disable-next-line typescript/no-unsafe-assignment -- type cascades from @clerk/shared/types
   const clerkLocale =
     ClerkLocalizations.supportedLocales[locale] ??
     ClerkLocalizations.defaultLocale;
@@ -30,9 +32,8 @@ export default async function AuthLayout(props: {
   return (
     <ClerkProvider
       appearance={{
-        cssLayerName: 'clerk', // Ensure Clerk is compatible with Tailwind CSS v4
+        cssLayerName: 'clerk',
       }}
-      // oxlint-disable-next-line typescript/no-unsafe-assignment
       localization={clerkLocale}
       signInUrl={signInUrl}
       signUpUrl={signUpUrl}
@@ -43,4 +44,14 @@ export default async function AuthLayout(props: {
       {props.children}
     </ClerkProvider>
   );
-}
+};
+
+const AuthLayout = (props: AuthLayoutProps) => {
+  return (
+    <Suspense fallback={null}>
+      <AuthContent {...props} />
+    </Suspense>
+  );
+};
+
+export default AuthLayout;

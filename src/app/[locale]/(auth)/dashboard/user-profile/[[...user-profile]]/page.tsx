@@ -1,16 +1,17 @@
 import { UserProfile } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
 
-import { getI18nPath } from '@/utils/Helpers';
+import { getI18nPath } from '@/utils/get-i18n-path';
 
-type UserProfilePageProps = {
+interface UserProfilePageProps {
   params: Promise<{ locale: string }>;
-};
+}
 
-export async function generateMetadata(
+export const generateMetadata = async (
   props: UserProfilePageProps
-): Promise<Metadata> {
+): Promise<Metadata> => {
   const { locale } = await props.params;
   const t = await getTranslations({
     locale,
@@ -22,15 +23,19 @@ export async function generateMetadata(
     description: t('meta_description'),
     robots: { index: false, follow: false },
   };
-}
+};
 
-export default async function UserProfilePage(props: UserProfilePageProps) {
+const UserProfilePage = async (props: UserProfilePageProps) => {
   const { locale } = await props.params;
   setRequestLocale(locale);
 
   return (
     <div className="my-6 lg:-ml-12">
-      <UserProfile path={getI18nPath('/dashboard/user-profile', locale)} />
+      <Suspense fallback={null}>
+        <UserProfile path={getI18nPath('/dashboard/user-profile', locale)} />
+      </Suspense>
     </div>
   );
-}
+};
+
+export default UserProfilePage;

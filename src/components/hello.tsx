@@ -4,14 +4,17 @@ import { getTranslations } from 'next-intl/server';
 export const Hello = async () => {
   const t = await getTranslations('Dashboard');
   const user = await currentUser();
+  const email = user?.primaryEmailAddress?.emailAddress;
+
+  if (email === undefined) {
+    throw new Error('Signed-in user has no primary email address');
+  }
 
   return (
     <>
       <p>
         {`👋 `}
-        {t('hello_message', {
-          email: user?.primaryEmailAddress?.emailAddress ?? '',
-        })}
+        {t('hello_message', { email })}
       </p>
       <p>
         {t.rich('alternative_message', {

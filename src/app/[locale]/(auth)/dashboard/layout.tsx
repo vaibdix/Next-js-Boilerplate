@@ -1,15 +1,20 @@
 import { SignOutButton } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import { LogOutIcon } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
 
-import { LocaleSwitcher } from '@/components/LocaleSwitcher';
+import { LocaleSwitcher } from '@/components/locale-switcher';
 import { Button } from '@/components/ui/button';
-import { Link } from '@/libs/I18nNavigation';
+import { Link } from '@/libs/i18n-navigation';
 
-export default async function DashboardLayout(props: {
+interface DashboardLayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
-}) {
+}
+
+const DashboardContent = async (props: DashboardLayoutProps) => {
+  await auth.protect();
   const { locale } = await props.params;
   setRequestLocale(locale);
   const t = await getTranslations({
@@ -53,4 +58,14 @@ export default async function DashboardLayout(props: {
       <main className="py-8">{props.children}</main>
     </div>
   );
-}
+};
+
+const DashboardLayout = (props: DashboardLayoutProps) => {
+  return (
+    <Suspense fallback={null}>
+      <DashboardContent {...props} />
+    </Suspense>
+  );
+};
+
+export default DashboardLayout;
