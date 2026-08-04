@@ -191,10 +191,10 @@ After defining the environment variables in your GitHub Actions, your localizati
 You can easily configure Next js Boilerplate by searching the entire project for `FIXME:` to make quick customizations. Here are some of the most important files to customize:
 
 - `public/apple-touch-icon.png`, `public/favicon.ico`, `public/favicon-16x16.png` and `public/favicon-32x32.png`: your website favicon
-- `src/utils/AppConfig.ts`: configuration file
+- `src/utils/app-config.ts`: configuration file
 - `src/templates/BaseTemplate.tsx`: default theme
 - `next.config.ts`: Next.js configuration
-- `.env`: default environment variables
+- `.env.local`: environment variables (copy `.env.example` to create it)
 
 You have full access to the source code for further customization. The provided code is just an example to help you start your project. The sky's the limit 🚀.
 
@@ -262,7 +262,7 @@ You can inspect captured events, view stack traces, and analyze errors in the Sp
 
 #### Production setup with Sentry
 
-For production environment, you'll need to create a Sentry account and a new project. Then, in `.env.production`, you need to update the following environment variables:
+For a production environment, you'll need to create a Sentry account and a new project, then supply the following environment variables through your host's configuration:
 
 ```shell
 NEXT_PUBLIC_SENTRY_DSN=
@@ -284,7 +284,7 @@ The project uses LogTape for logging. In the development environment, logs are d
 
 For production, the project is already integrated with [Better Stack](https://betterstack.com/?utm_source=github&utm_medium=sponsorship&utm_campaign=next-js-boilerplate) to manage and query your logs using SQL. To use Better Stack, you need to create a [Better Stack](https://betterstack.com/?utm_source=github&utm_medium=sponsorship&utm_campaign=next-js-boilerplate) account and create a new source: go to your Better Stack Logs Dashboard > Sources > Connect source. Then, you need to give a name to your source and select Node.js as the platform.
 
-After creating the source, you will be able to view and copy your source token. In your environment variables, paste the token into the `NEXT_PUBLIC_BETTER_STACK_SOURCE_TOKEN` variable. You'll also need to define the `NEXT_PUBLIC_BETTER_STACK_INGESTING_HOST` variable, which can be found in the same place as the source token.
+After creating the source, copy its source token into the server-only `BETTER_STACK_SOURCE_TOKEN` variable. Define `BETTER_STACK_INGESTING_HOST` from the same screen. Keep both values in an untracked `.env.local` file or your deployment platform's secret store.
 
 Now, all logs will automatically be sent to and ingested by Better Stack.
 
