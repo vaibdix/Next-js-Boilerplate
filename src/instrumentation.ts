@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/nextjs';
 
 const sentryOptions: Sentry.NodeOptions | Sentry.EdgeOptions = {
   dsn: process.env['NEXT_PUBLIC_SENTRY_DSN'],
-  spotlight: process.env.NODE_ENV === 'development',
+  spotlight: process.env['NEXT_PUBLIC_SPOTLIGHT'] === '1',
   integrations: [Sentry.consoleLoggingIntegration()],
   dataCollection: { frameContextLines: 7 },
   tracesSampleRate: 1,

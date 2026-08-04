@@ -15,7 +15,7 @@ if (
       Sentry.consoleLoggingIntegration(),
       Sentry.browserTracingIntegration(),
 
-      ...(process.env.NODE_ENV === 'development'
+      ...(process.env['NEXT_PUBLIC_SPOTLIGHT'] === '1'
         ? [Sentry.spotlightBrowserIntegration()]
         : []),
     ],

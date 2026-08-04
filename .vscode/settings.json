@@ -57,5 +57,38 @@
   "json.schemaDownload.trustedDomains": {
     "https://ui.shadcn.com": true
   },
-  "js/ts.experimental.useTsgo": true
+  "js/ts.experimental.useTsgo": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": false,
+    "**/.hg": false,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": false,
+    "**/CVS": false,
+    "**/node_modules": false,
+    "**/.next": false,
+    "**/.husky": false,
+    "**/drizzle": false,
+    "**/dist": false,
+    "**/.todo.md": false,
+    "**/.vscode": false,
+    "**/.eslintrc.cjs": false,
+    "**/.editorconfig": false,
+    "**/.gitignore": false,
+    "**/.lintstagedrc.mjs": false,
+    "**/.prettierignore": false,
+    "**/bun.lockb": false,
+    "**/package-lock.json": false,
+    "**/pnpm-lock.yaml": false,
+    "**/next-env.d.ts": false,
+    "**/postcss.config.cjs": false,
+    "**/prettier.config.js": false,
+    "**/README.md": false,
+    "**/next.config.js": false,
+    "**/tailwind.config.ts": false,
+    "**/drizzle.config.ts": false,
+    "**/migrate.ts": false,
+    "**/.env.example": false
+  },
+  "explorerExclude.backup": {}
 }

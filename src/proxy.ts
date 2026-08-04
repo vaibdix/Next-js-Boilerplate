@@ -6,32 +6,11 @@ import { NextResponse } from 'next/server';
 
 import { routing } from './libs/i18n-routing';
 import { createArcjetClient } from '@/libs/arcjet';
+import { isClerkPath } from '@/utils/is-clerk-path';
+import { isProtectedPath } from '@/utils/is-protected-path';
+import { splitLocale } from '@/utils/split-locale';
 
 const handleI18nRouting = createMiddleware(routing);
-
-const AUTH_PAGE_PREFIXES = ['/sign-in', '/sign-up'] as const;
-const PROTECTED_PREFIX = '/dashboard';
-
-const splitLocale = (pathname: string) => {
-  const [, firstSegment = '', ...restSegments] = pathname.split('/');
-  const hasLocalePrefix = routing.locales.some(
-    (locale) => locale === firstSegment
-  );
-
-  return hasLocalePrefix
-    ? {
-        localePrefix: `/${firstSegment}`,
-        pathWithoutLocale: `/${restSegments.join('/')}`,
-      }
-    : { localePrefix: '', pathWithoutLocale: pathname };
-};
-
-const isProtectedPath = (pathWithoutLocale: string) =>
-  pathWithoutLocale.startsWith(PROTECTED_PREFIX);
-
-const isClerkPath = (pathWithoutLocale: string) =>
-  isProtectedPath(pathWithoutLocale) ||
-  AUTH_PAGE_PREFIXES.some((prefix) => pathWithoutLocale.startsWith(prefix));
 
 const handleClerk = clerkMiddleware(async (auth, request) => {
   const { localePrefix, pathWithoutLocale } = splitLocale(
