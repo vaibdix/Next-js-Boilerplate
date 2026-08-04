@@ -2,25 +2,30 @@ import { detectBot } from '@arcjet/next';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-import arcjet from '@/libs/Arcjet';
-import { Env } from '@/libs/Env';
+import { createArcjetClient } from '@/libs/arcjet';
+import { Env } from '@/libs/env';
+import { logger } from '@/libs/logger';
 import { contactFormSchema } from '@/validations/contact-form';
 import type {
   ContactFormResponse,
   ContactFormResponseMessage,
+  ContactFormValues,
 } from '@/validations/contact-form';
 
-const contactRouteProtection = arcjet.withRule(
-  detectBot({
-    mode: 'LIVE',
-    allow: [],
-  })
-);
+const contactRouteProtection =
+  Env.ARCJET_KEY === undefined
+    ? undefined
+    : createArcjetClient(Env.ARCJET_KEY).withRule(
+        detectBot({
+          mode: 'LIVE',
+          allow: [],
+        })
+      );
 
-function createContactErrorResponse(props: {
+const createContactErrorResponse = (props: {
   status: number;
   message: ContactFormResponseMessage;
-}) {
+}) => {
   const body: ContactFormResponse = {
     ok: false,
     message: props.message,
@@ -29,35 +34,87 @@ function createContactErrorResponse(props: {
   return NextResponse.json(body, {
     status: props.status,
   });
-}
+};
 
-async function getRequestJson(request: NextRequest) {
+const getRequestJson = async (request: NextRequest) => {
   try {
     const value: unknown = await request.json();
 
     return value;
-  } catch {
+  } catch (error) {
+    logger.warn('Contact request body was not valid JSON', { error });
+
     return null;
   }
-}
+};
 
-export function GET() {
+const getProtectionError = async (request: NextRequest) => {
+  if (contactRouteProtection === undefined) {
+    return null;
+  }
+
+  const decision = await contactRouteProtection.protect(request);
+
+  if (!decision.isDenied()) {
+    return null;
+  }
+
+  logger.warn('Contact request denied by Arcjet', {
+    reason: decision.reason,
+  });
+
+  return createContactErrorResponse({
+    status: 403,
+    message: 'forbidden',
+  });
+};
+
+const submitContactForm = async (values: ContactFormValues) => {
+  const response = await fetch(
+    `https://formsubmit.co/ajax/${Env.FORMSUBMIT_EMAIL}`,
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        message: values.message,
+        _captcha: 'false',
+        _subject: 'New contact form submission',
+      }),
+      signal: AbortSignal.timeout(10_000),
+    }
+  ).catch((error: unknown) => {
+    logger.error('Contact form upstream request failed', { error });
+
+    return null;
+  });
+
+  if (response !== null && !response.ok) {
+    logger.error('Contact form upstream returned {status}', {
+      status: response.status,
+    });
+  }
+
+  return response?.ok === true;
+};
+
+export const GET = () => {
   return createContactErrorResponse({
     status: 405,
     message: 'submit_error',
   });
-}
+};
 
-export async function POST(request: NextRequest) {
-  if (Env.ARCJET_KEY !== undefined) {
-    const decision = await contactRouteProtection.protect(request);
+export const POST = async (request: NextRequest) => {
+  const protectionError = await getProtectionError(request);
 
-    if (decision.isDenied()) {
-      return createContactErrorResponse({
-        status: 403,
-        message: 'forbidden',
-      });
-    }
+  if (protectionError !== null) {
+    return protectionError;
   }
 
   const requestBody = await getRequestJson(request);
@@ -70,27 +127,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const upstreamResponse = await fetch(
-    `https://formsubmit.co/ajax/${Env.FORMSUBMIT_EMAIL}`,
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: parsedBody.data.name,
-        email: parsedBody.data.email,
-        phone: parsedBody.data.phone,
-        message: parsedBody.data.message,
-        _captcha: 'false',
-        _subject: 'New contact form submission',
-      }),
-      signal: AbortSignal.timeout(10_000),
-    }
-  ).catch(() => null);
-
-  if (upstreamResponse === null || !upstreamResponse.ok) {
+  if (!(await submitContactForm(parsedBody.data))) {
     return createContactErrorResponse({
       status: 502,
       message: 'submit_error',
@@ -102,4 +139,4 @@ export async function POST(request: NextRequest) {
   };
 
   return NextResponse.json(responseBody);
-}
+};
