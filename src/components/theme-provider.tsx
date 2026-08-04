@@ -20,51 +20,65 @@ const ThemeContext = React.createContext<{
 }>({
   theme: 'system',
   resolvedTheme: 'light',
-  setTheme: (_theme: Theme) => {
-    // noop — overridden by provider
-  },
+  setTheme: (_theme: Theme) => {},
 });
 
-function useTheme() {
-  return React.useContext(ThemeContext);
-}
+const TYPING_TARGET_TAGS = new Set(['INPUT', 'SELECT', 'TEXTAREA']);
 
-function isTypingTarget(target: EventTarget | null) {
+const useTheme = () => {
+  return React.useContext(ThemeContext);
+};
+
+const isTypingTarget = (target: EventTarget | null) => {
   if (!(target instanceof HTMLElement)) {
     return false;
   }
 
-  return (
-    target.isContentEditable ||
-    target.tagName === 'INPUT' ||
-    target.tagName === 'TEXTAREA' ||
-    target.tagName === 'SELECT'
-  );
-}
+  return target.isContentEditable || TYPING_TARGET_TAGS.has(target.tagName);
+};
 
-function ThemeHotkey() {
+const shouldIgnoreThemeHotkey = (event: KeyboardEvent) => {
+  return [
+    event.defaultPrevented,
+    event.repeat,
+    event.metaKey,
+    event.ctrlKey,
+    event.altKey,
+    event.key.toLowerCase() !== 'd',
+    isTypingTarget(event.target),
+  ].includes(true);
+};
+
+const getCookieTheme = (): Theme => {
+  const pattern = new RegExp(`(?:^|;\\s*)${THEME_COOKIE_NAME}=([^;]+)`, 'u');
+  const value = pattern.exec(document.cookie)?.[1];
+
+  return isTheme(value) ? value : 'system';
+};
+
+const getInitialTheme = (initialTheme: Theme | undefined): Theme => {
+  if (initialTheme !== undefined) {
+    return initialTheme;
+  }
+
+  if (typeof document === 'undefined') {
+    return 'system';
+  }
+
+  return getCookieTheme();
+};
+
+const ThemeHotkey = () => {
   const { resolvedTheme, setTheme } = useTheme();
 
   React.useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.defaultPrevented || event.repeat) {
-        return;
-      }
-
-      if (event.metaKey || event.ctrlKey || event.altKey) {
-        return;
-      }
-
-      if (event.key.toLowerCase() !== 'd') {
-        return;
-      }
-
-      if (isTypingTarget(event.target)) {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (shouldIgnoreThemeHotkey(event)) {
         return;
       }
 
       setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-    }
+    };
 
     window.addEventListener('keydown', onKeyDown);
 
@@ -74,31 +88,16 @@ function ThemeHotkey() {
   }, [resolvedTheme, setTheme]);
 
   return null;
-}
+};
 
-function ThemeProvider(props: {
+const ThemeProvider = (props: {
   initialTheme?: Theme;
   children: React.ReactNode;
-}) {
-  // Read the theme cookie client-side so the React state matches what
-  // `ThemeScript` applied to `<html>` pre-paint. The layout no longer reads
-  // cookies (would block prerendering under Cache Components — see
-  // `@/components/theme-script`).
-  const initial = React.useMemo<Theme>(() => {
-    if (props.initialTheme) {
-      return props.initialTheme;
-    }
-
-    if (typeof document === 'undefined') {
-      return 'system';
-    }
-
-    const pattern = new RegExp(`(?:^|;\\s*)${THEME_COOKIE_NAME}=([^;]+)`, 'u');
-    const match = pattern.exec(document.cookie);
-    const value = match?.[1];
-
-    return isTheme(value) ? value : 'system';
-  }, [props.initialTheme]);
+}) => {
+  const initial = React.useMemo(
+    () => getInitialTheme(props.initialTheme),
+    [props.initialTheme]
+  );
 
   const [theme, setThemeState] = React.useState<Theme>(initial);
   const [resolved, setResolved] = React.useState<'light' | 'dark'>(() =>
@@ -108,34 +107,27 @@ function ThemeProvider(props: {
   const setTheme = React.useCallback((next: Theme) => {
     setThemeState(next);
 
-    const r = resolveTheme(next);
-    setResolved(r);
-    applyTheme(r);
+    const resolvedTheme = resolveTheme(next);
+    setResolved(resolvedTheme);
+    applyTheme(resolvedTheme);
 
     setThemeCookie(next);
 
-    try {
-      localStorage.setItem(THEME_STORAGE_KEY, next);
-    } catch {
-      // Storage unavailable
-    }
+    localStorage.setItem(THEME_STORAGE_KEY, next);
   }, []);
 
-  // Apply theme on mount (handles 'system' case where server couldn't resolve)
   React.useEffect(() => {
-    const r = resolveTheme(theme);
-    setResolved(r);
-    applyTheme(r);
+    const resolvedTheme = resolveTheme(theme);
+    applyTheme(resolvedTheme);
   }, [theme]);
 
-  // Listen for system preference changes
   React.useEffect(() => {
     const media = window.matchMedia(MEDIA_QUERY);
     const handler = () => {
       if (theme === 'system') {
-        const r = resolveTheme('system');
-        setResolved(r);
-        applyTheme(r);
+        const resolvedTheme = resolveTheme('system');
+        setResolved(resolvedTheme);
+        applyTheme(resolvedTheme);
       }
     };
 
@@ -146,19 +138,18 @@ function ThemeProvider(props: {
     };
   }, [theme]);
 
-  // Cross-tab sync via localStorage
   React.useEffect(() => {
     const handler = (event: StorageEvent) => {
       if (event.key === THEME_STORAGE_KEY) {
-        const val = event.newValue ?? undefined;
+        const storedTheme = event.newValue ?? undefined;
 
-        if (isTheme(val)) {
-          setThemeState(val);
+        if (isTheme(storedTheme)) {
+          setThemeState(storedTheme);
 
-          const r = resolveTheme(val);
-          setResolved(r);
-          applyTheme(r);
-          setThemeCookie(val);
+          const resolvedTheme = resolveTheme(storedTheme);
+          setResolved(resolvedTheme);
+          applyTheme(resolvedTheme);
+          setThemeCookie(storedTheme);
         }
       }
     };
@@ -181,6 +172,6 @@ function ThemeProvider(props: {
       {props.children}
     </ThemeContext.Provider>
   );
-}
+};
 
 export { ThemeProvider, useTheme };
