@@ -1,16 +1,11 @@
 import { defineConfig } from 'oxfmt';
-import ultracite from 'ultracite/oxfmt';
 
 export default defineConfig({
-  extends: [ultracite],
   arrowParens: 'always',
   bracketSameLine: false,
   bracketSpacing: true,
   endOfLine: 'lf',
-  importOrder: ['<THIRD_PARTY_MODULES>', '^\\.'],
-  importOrderSortSpecifiers: true,
-  importOrderSeparation: true,
-  experimentalSortImports: {
+  sortImports: {
     groups: [
       ['value-builtin', 'value-external', 'type-builtin', 'type-external'],
       [
@@ -33,7 +28,7 @@ export default defineConfig({
     partitionByNewline: false,
     sortSideEffects: false,
   },
-  experimentalSortPackageJson: true,
+  sortPackageJson: true,
   jsxSingleQuote: false,
   printWidth: 80,
   quoteProps: 'as-needed',
@@ -42,11 +37,10 @@ export default defineConfig({
   tabWidth: 2,
   trailingComma: 'es5',
   useTabs: false,
-  ignorePatterns: ['migrations/*', '*.md'],
+  ignorePatterns: ['.agents/**', '**/*.md', 'migrations/*'],
   sortTailwindcss: {
     stylesheet: 'src/styles/global.css',
   },
-  // Keep JSON/JSONC output consistent between the CLI and VS Code
   overrides: [
     {
       files: ['**/*.json', '**/*.jsonc'],

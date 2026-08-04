@@ -16,6 +16,7 @@
     // ======================================================================
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
     // ======================================================================
     // Type Safety - Foundation
     // Core type checking settings for a robust codebase

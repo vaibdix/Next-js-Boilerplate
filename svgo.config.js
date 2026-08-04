@@ -9,9 +9,7 @@ export const SVGOConfig = {
         },
       },
     },
-    // Keep viewBox
     'removeViewBox',
-    // convert width/height to viewBox if missing
     { name: 'removeDimensions' },
     {
       name: 'removeAttrs',

@@ -1,7 +1,6 @@
 export default {
   extends: ['stylelint-config-standard'],
   rules: {
-    // For Tailwind
     'at-rule-no-unknown': [
       true,
       {

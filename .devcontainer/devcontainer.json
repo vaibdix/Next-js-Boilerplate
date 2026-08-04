@@ -1,5 +1,5 @@
 {
-  "name": "Next.js Webalar Starter",
+  "name": "Next.js latest Starter",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:24-bookworm",
   "remoteUser": "node",
   "features": {

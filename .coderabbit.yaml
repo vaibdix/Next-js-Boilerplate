@@ -1,7 +1,3 @@
-# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
-
-# CodeRabbit is an AI-powered code reviewer that cuts review time and bugs in half
-
 language: en-US
 early_access: false
 reviews:

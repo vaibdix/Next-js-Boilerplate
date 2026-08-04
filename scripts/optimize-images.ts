@@ -1,19 +1,3 @@
-#!/usr/bin/env tsx
-/**
- * Optimizes images to AVIF format with a max long-edge of 2560px.
- *
- * Usage:
- *   pnpm optimize-images <file1> <file2> ...
- *
- * Behavior:
- *   - Skips files already AVIF under the size threshold (idempotent).
- *   - Handles HEIC/HEIF via libheif fallback if sharp can't decode.
- *   - Preserves filename, swaps extension to .avif.
- *   - Removes original after successful conversion.
- *   - Strips EXIF (including GPS).
- *   - Auto-rotates based on EXIF orientation.
- */
-
 import { execSync } from 'node:child_process';
 import { existsSync, statSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -21,15 +5,15 @@ import { basename, dirname, extname, join } from 'node:path';
 import sharp from 'sharp/lib/index.js';
 
 const MAX_DIMENSION = 2560;
-const AVIF_QUALITY = 70; // AVIF q70 ≈ JPEG q85 visually
-const AVIF_EFFORT = 4; // 0–9, higher = smaller but slower
-const SKIP_IF_SMALLER_THAN = 500_000; // 500KB — already small, skip
+const AVIF_QUALITY = 70;
+const AVIF_EFFORT = 4;
+const SKIP_IF_SMALLER_THAN = 500_000;
 const CONCURRENCY = 4;
 const BYTES_PER_KB = 1024;
 const BYTES_PER_MB = 1024 * 1024;
 const PERCENT_MAX = 100;
 
-type SharpInstance = {
+interface SharpInstance {
   rotate: () => SharpInstance;
   resize: (
     width: number,
@@ -45,7 +29,7 @@ type SharpInstance = {
     chromaSubsampling: '4:2:0';
   }) => SharpInstance;
   toFile: (output: string) => Promise<unknown>;
-};
+}
 
 type SharpLoader = (
   input: string,
@@ -54,9 +38,9 @@ type SharpLoader = (
   }
 ) => SharpInstance;
 
-function isSharpLoader(value: unknown): value is SharpLoader {
+const isSharpLoader = (value: unknown): value is SharpLoader => {
   return typeof value === 'function';
-}
+};
 
 if (!isSharpLoader(sharp)) {
   throw new TypeError('sharp loader is unavailable');
@@ -77,25 +61,25 @@ const SUPPORTED_INPUTS = new Set([
   '.gif',
 ]);
 
-type OptimizedResult = {
+interface OptimizedResult {
   file: string;
   status: 'optimized';
   from: number;
   to: number;
   ms: number;
-};
+}
 
-type SkippedResult = {
+interface SkippedResult {
   file: string;
   status: 'skipped';
   reason: string;
-};
+}
 
-type FailedResult = {
+interface FailedResult {
   file: string;
   status: 'failed';
   reason: string;
-};
+}
 
 type Result = OptimizedResult | SkippedResult | FailedResult;
 
@@ -104,7 +88,7 @@ type Result = OptimizedResult | SkippedResult | FailedResult;
  * @param n - The number of bytes to format.
  * @returns A formatted string like "1.2MB" or "345KB" or "678B".
  */
-function formatBytes(n: number): string {
+const formatBytes = (n: number): string => {
   if (n < BYTES_PER_KB) {
     return `${n}B`;
   }
@@ -112,24 +96,13 @@ function formatBytes(n: number): string {
     return `${(n / BYTES_PER_KB).toFixed(1)}KB`;
   }
   return `${(n / BYTES_PER_MB).toFixed(2)}MB`;
-}
+};
 
-/**
- * Extracts a message string from an unknown thrown value.
- * @param error - The caught error value of unknown type.
- * @returns The error's message, or its string coercion as a fallback.
- */
-function errorMessage(error: unknown): string {
+const errorMessage = (error: unknown): string => {
   return error instanceof Error ? error.message : String(error);
-}
+};
 
-/**
- * Reads an image, resizes/rotates/strips metadata, writes as AVIF.
- * @param input - Absolute or relative path to the source image.
- * @param output - Absolute or relative path for the output AVIF file.
- * @returns A promise that resolves when the output file has been written.
- */
-async function processSrc(input: string, output: string): Promise<void> {
+const processSrc = async (input: string, output: string): Promise<void> => {
   await createSharp(input, { failOn: 'none' })
     .rotate()
     .resize(MAX_DIMENSION, MAX_DIMENSION, {
@@ -142,23 +115,14 @@ async function processSrc(input: string, output: string): Promise<void> {
       chromaSubsampling: '4:2:0',
     })
     .toFile(output);
-}
+};
 
-/**
- * Decides what to do once an AVIF output exists: keep it (and delete the
- * original) or discard it if it grew larger than the source.
- * @param originalFile - Path to the original image file.
- * @param outPath - Path to the freshly written AVIF file.
- * @param originalSize - Size in bytes of the original image.
- * @param start - Timestamp (ms) marking when optimization began.
- * @returns A Result describing whether the file was optimized or skipped.
- */
-function finalize(
+const finalize = (
   originalFile: string,
   outPath: string,
   originalSize: number,
   start: number
-): Result {
+): Result => {
   const newSize = statSync(outPath).size;
 
   if (
@@ -184,25 +148,15 @@ function finalize(
     to: newSize,
     ms: Date.now() - start,
   };
-}
+};
 
-/**
- * Falls back to `heif-convert` for HEIC/HEIF inputs that sharp's prebuilt
- * binary cannot decode. Converts to a temporary JPEG, then processes normally.
- * @param file - Path to the HEIC/HEIF source file.
- * @param ext - The lowercased file extension (including dot).
- * @param outPath - Target AVIF output path.
- * @param originalSize - Size in bytes of the original file.
- * @param start - Timestamp (ms) marking when optimization began.
- * @returns A Result describing the outcome of the fallback attempt.
- */
-async function tryHeicFallback(
+const tryHeicFallback = async (
   file: string,
   ext: string,
   outPath: string,
   originalSize: number,
   start: number
-): Promise<Result> {
+): Promise<Result> => {
   try {
     const intermediate = join(
       tmpdir(),
@@ -221,14 +175,9 @@ async function tryHeicFallback(
       reason: `HEIC fallback failed: ${errorMessage(error)}`,
     };
   }
-}
+};
 
-/**
- * Optimizes a single image file, with HEIC fallback if needed.
- * @param file - Path to the image file to optimize.
- * @returns A Result describing the outcome (optimized, skipped, or failed).
- */
-async function optimize(file: string): Promise<Result> {
+const optimize = async (file: string): Promise<Result> => {
   const start = Date.now();
   const ext = extname(file).toLowerCase();
 
@@ -253,18 +202,13 @@ async function optimize(file: string): Promise<Result> {
   } catch (error) {
     const isHeic = ext === '.heic' || ext === '.heif';
     if (isHeic) {
-      return await tryHeicFallback(file, ext, outPath, originalSize, start);
+      return tryHeicFallback(file, ext, outPath, originalSize, start);
     }
     return { file, status: 'failed', reason: errorMessage(error) };
   }
-}
+};
 
-/**
- * Prints a single result line to stdout in a human-friendly format.
- * @param result - The Result to print.
- * @returns Nothing.
- */
-function printResult(result: Result): void {
+const printResult = (result: Result): void => {
   if (result.status === 'optimized') {
     const savedPct = (
       PERCENT_MAX -
@@ -280,32 +224,22 @@ function printResult(result: Result): void {
     return;
   }
   console.log(`  ✗ ${result.file}  FAILED: ${result.reason}`);
-}
+};
 
-/**
- * Processes an array of file paths in concurrency-limited batches.
- * @param files - The list of file paths to process.
- * @returns An array of Results, one per input file, in input order.
- */
-async function runBatches(files: string[]): Promise<Result[]> {
+const runBatches = async (files: string[]): Promise<Result[]> => {
   const results: Result[] = [];
   for (let i = 0; i < files.length; i += CONCURRENCY) {
     const batch = files.slice(i, i + CONCURRENCY);
-    const batchResults = await Promise.all(batch.map(optimize));
+    const batchResults = await Promise.all(batch.map((file) => optimize(file)));
     for (const result of batchResults) {
       results.push(result);
       printResult(result);
     }
   }
   return results;
-}
+};
 
-/**
- * Entry point. Reads file paths from argv, optimizes each, exits non-zero on
- * any failure.
- * @returns A promise that resolves when all files have been processed.
- */
-async function main(): Promise<void> {
+const main = async (): Promise<void> => {
   const files = process.argv.slice(2);
 
   if (files.length === 0) {
@@ -324,7 +258,7 @@ async function main(): Promise<void> {
     console.error(`\n${failed.length} image(s) failed to optimize.`);
     process.exit(1);
   }
-}
+};
 
 try {
   await main();
