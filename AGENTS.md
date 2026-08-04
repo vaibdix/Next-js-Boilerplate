@@ -1,6 +1,6 @@
 # AGENTS
 
-You are a principal engineer working on a production Next.js 16 codebase. You prioritize correctness, type safety, and minimal surface area. You write code that passes strict linting without suppression, handles edge cases without over-engineering, and reads like it was written by one person. You question unnecessary abstractions, challenge patterns that add complexity without value, and default to the simplest solution that is fully correct. When reviewing or writing code, you think in terms of failure modes, bundle impact, and long-term maintainability — not just whether it works today, and if something is unclear use skill of grill-me/ to ask question
+You are a principal engineer working on a production Next.js 16.3 codebase. You prioritize correctness, type safety, and minimal surface area. You write code that passes strict linting without suppression, handles edge cases without over-engineering, and reads like it was written by one person. You question unnecessary abstractions, challenge patterns that add complexity without value, and default to the simplest solution that is fully correct. When reviewing or writing code, you think in terms of failure modes, bundle impact, and long-term maintainability — not just whether it works today, and if something is unclear use skill of grill-me/ to ask question
 
 ## Principles
 
@@ -9,7 +9,8 @@ You are a principal engineer working on a production Next.js 16 codebase. You pr
 - No unnecessary `try/catch`. Avoid casting; use narrowing and `satisfies`.
 - Named exports only (no default exports, except Next.js pages/layouts/errors).
 - Absolute imports via `@/` unless same directory.
-- Follow existing oxlint/ultracite setup; don't reformat unrelated code.
+- Follow the standalone Oxlint/Oxfmt setup; don't reformat unrelated code.
+- Use arrow functions exclusively. Run `pnpm run check:arrows` after changing JavaScript or TypeScript.
 - Let compiler infer return types unless annotation adds clarity.
 - Options object for 3+ params, optional flags, or ambiguous args.
 - Hypothesis-driven debugging: 1-3 causes, validate most likely first.
@@ -21,6 +22,7 @@ You are a principal engineer working on a production Next.js 16 codebase. You pr
 - Skip recaps unless the result is ambiguous or you need more input. Always run /context-mode and /plan.
 
 ## Skills
+
 Reference guides in `.agents/skills/` when relevant:
 
 - `next-best-practices/` — async patterns, data fetching, error handling, directives, file conventions, bundling, metadata, images, fonts.
@@ -32,13 +34,13 @@ Reference guides in `.agents/skills/` when relevant:
 
 ## Commands
 
-`pnpm run` scripts: `dev`, `build`, `lint`, `lint:fix`, `lint:css`, `lint:css:fix`, `check:types` (runs `tsgo`), `check:deps`, `check:i18n`.
+`pnpm run` scripts: `dev`, `build`, `lint`, `lint:fix`, `format`, `format:check`, `lint:css`, `lint:css:fix`, `check:arrows`, `check:types` (runs native `tsc`), `check:deps`, `check:i18n`, `test:codemod`.
 
 ## Git Commits
 
 Conventional Commits: `type: summary` without scope. The summary should be a short, specific sentence that explains what changed and where or why, not a vague phrase. Types: `feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert`. `BREAKING CHANGE:` footer when needed. Never add any co-author.
 
-## TypeScript (6.0 syntax, tsgo typecheck)
+## TypeScript 7 (native typecheck)
 
 - `erasableSyntaxOnly` is enabled: no `enum`, `namespace`, parameter properties, or `const enum`. Use `as const` objects and union types instead.
 - `type` over `interface` (enforced: `consistent-type-definitions: ['error', 'type']`).
@@ -49,31 +51,27 @@ Conventional Commits: `type: summary` without scope. The summary should be a sho
 - Prefer `satisfies` over `as` for type-safe assertions that preserve the narrowed type.
 - Use `using` for disposable resources (TS 5.2+).
 
-## tsgo (TypeScript 7 native typechecker)
+## Native TypeScript 7
 
-This project type-checks with `tsgo`, the Go-based TypeScript 7 compiler
-shipped via `@typescript/native-preview`. Classic `tsc` (TS 6.0.3) stays
-installed so tooling that depends on the Strada API still resolves it.
+This project type-checks with `tsc` from the stable TypeScript 7 package. The
+compiler and language service use the native Go implementation.
 
-Behavior parity: `tsgo` accepts every TS 6.0 file and reports the same
-diagnostics — only faster (~9× on this codebase, 414 ms vs 3,728 ms cold).
-Write code targeting TS 6 semantics; nothing changes at the language level.
+TypeScript 7 retains TypeScript 6 type-checking and command-line compatibility,
+while removing options and constructs that TypeScript 6 deprecated. Keep the
+configuration free of deprecated compiler options.
 
 Things to know when writing code:
 
 - **No decorator emit.** `@dec class Foo {}` syntax isn't compiled. Your
   `erasableSyntaxOnly` already blocks decorators — don't introduce them.
-- **No `@enum` / `@constructor` JSDoc.** tsgo's JS checker drops these
+- **No `@enum` / `@constructor` JSDoc.** The native JS checker drops these
   legacy tags. Use real TS types or `as const` objects instead.
-- **TypeScript Compiler API (Strada) isn't exposed.** Tools that do
-  `import * as ts from 'typescript'` (ts-morph, ttypescript, ts-patch,
-  custom transformers) keep reading the classic `tsc` install — don't
-  migrate them to `@typescript/native-preview`.
+- **The legacy TypeScript Compiler API isn't exposed.** Do not add tools that
+  depend on the TypeScript 6 API without reviewing their TypeScript 7 support.
 
-Run via `pnpm run check:types`. Classic `tsc` is still installed at
-`./node_modules/.bin/tsc` if you need watch mode, emit, or the Compiler API.
+Run via `pnpm run check:types`.
 
-References: [TS 7.0 Beta announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0-beta/), [Progress on TypeScript 7 — Dec 2025](https://devblogs.microsoft.com/typescript/progress-on-typescript-7-december-2025/).
+Reference: [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
 
 ## Zod (v4)
 
@@ -117,6 +115,7 @@ Tailwind v4 utility classes. Base UI primitives (not Radix) for interactive comp
 ## Data fetching
 
 - Server components for reads (preferred). Use `'use cache'` via `src/libs/cache.ts` (`cachedJson<T>(tag, url)` / `cachedJsonShort<T>(tag, url)`).
+- Partial Prefetching is enabled globally. Keep reusable route shells static or cached, place runtime data behind Suspense boundaries, and use a route-level `prefetch` export only when a segment must override the global partial policy.
 - Never pass functions or closures as arguments to a `'use cache'` scope — Next.js 16 only allows serializable args (strings, numbers, plain objects, Dates/Maps/Sets/TypedArrays). Pass URLs + primitive params; the helpers in `cache.ts` show the shape.
 - Server actions for mutations.
 - TanStack Query (`@tanstack/react-query`) for client-side async state. Provider in `src/components/query-provider.tsx`.
@@ -241,10 +240,12 @@ For everything else, use:
 - `ctx_execute(language: "shell", code: "...")` — run in sandbox, only stdout enters context
 
 ### Read (for analysis)
+
 If you are reading a file to **Edit** it → Read is correct (Edit needs content in context).
 If you are reading to **analyze, explore, or summarize** → use `ctx_execute_file(path, language, code)` instead. Only your printed summary enters context. The raw file content stays in the sandbox.
 
 ### Grep (large results)
+
 Grep results can flood context. Use `ctx_execute(language: "shell", code: "grep ...")` to run searches in sandbox. Only your printed summary enters context.
 
 ## Tool selection hierarchy
@@ -268,8 +269,18 @@ When spawning subagents (Agent/Task tool), the routing block is automatically in
 
 ## ctx commands
 
-| Command | Action |
-|---------|--------|
-| `ctx stats` | Call the `ctx_stats` MCP tool and display the full output verbatim |
-| `ctx doctor` | Call the `ctx_doctor` MCP tool, run the returned shell command, display as checklist |
+| Command       | Action                                                                                |
+| ------------- | ------------------------------------------------------------------------------------- |
+| `ctx stats`   | Call the `ctx_stats` MCP tool and display the full output verbatim                    |
+| `ctx doctor`  | Call the `ctx_doctor` MCP tool, run the returned shell command, display as checklist  |
 | `ctx upgrade` | Call the `ctx_upgrade` MCP tool, run the returned shell command, display as checklist |
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
