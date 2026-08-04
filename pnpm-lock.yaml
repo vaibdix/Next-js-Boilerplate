@@ -142,9 +142,6 @@ importers:
       npm-run-all2:
         specifier: 9.0.3
         version: 9.0.3
-      oxc-parser:
-        specifier: 0.142.0
-        version: 0.142.0
       oxfmt:
         specifier: 0.61.0
         version: 0.61.0

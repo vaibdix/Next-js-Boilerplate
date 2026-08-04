@@ -10,12 +10,10 @@
     "start": "next start",
     "build-stats": "cross-env ANALYZE=true pnpm run build",
     "clean": "rimraf .next out",
-    "codemod:arrows": "node scripts/function-to-arrow.ts .",
-    "check:arrows": "node scripts/function-to-arrow.ts . --check",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
-    "lint": "run-s check:arrows lint:oxlint format:check",
-    "lint:fix": "run-s codemod:arrows lint:oxlint:fix format",
+    "lint": "run-s lint:oxlint format:check",
+    "lint:fix": "run-s lint:oxlint:fix format",
     "lint:oxlint": "oxlint .",
     "lint:oxlint:fix": "oxlint --fix .",
     "check:types": "tsc --noEmit --pretty",
@@ -25,8 +23,7 @@
     "lint:css": "stylelint \"**/*.css\"",
     "lint:css:fix": "stylelint \"**/*.css\" --fix",
     "commit": "commit",
-    "optimize-images": "node scripts/optimize-images.ts",
-    "test:codemod": "node --test scripts/function-to-arrow.test.ts"
+    "optimize-images": "node scripts/optimize-images.ts"
   },
   "dependencies": {
     "@arcjet/next": "1.9.1",
@@ -72,7 +69,6 @@
     "knip": "6.31.0",
     "lefthook": "2.1.10",
     "npm-run-all2": "9.0.3",
-    "oxc-parser": "0.142.0",
     "oxfmt": "0.61.0",
     "oxlint": "1.76.0",
     "oxlint-tsgolint": "7.0.2001",

@@ -7,15 +7,6 @@ commit-msg:
 # Validate content before committing
 pre-commit:
   jobs:
-    - name: arrow-functions
-      run: node scripts/function-to-arrow.ts {staged_files}
-      glob:
-        - '**/*.js'
-        - '**/*.jsx'
-        - '**/*.ts'
-        - '**/*.tsx'
-      stage_fixed: true
-
     - name: oxlint
       run: pnpm exec oxlint --fix {staged_files}
       glob:

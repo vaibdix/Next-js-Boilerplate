@@ -116,12 +116,6 @@ export default defineConfig({
       },
     },
     {
-      files: ['scripts/function-to-arrow.ts'],
-      rules: {
-        'max-lines': 'off',
-      },
-    },
-    {
       files: ['scripts/optimize-images.ts'],
       rules: {
         'no-await-in-loop': 'off', // Batches are intentionally processed sequentially
