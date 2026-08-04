@@ -1,32 +1,34 @@
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
 
-import { ContactSection } from '@/components/contact-section';
-import { generatePageMetadata } from '@/utils/Metadata';
+import { ContactContent } from './contact-content';
+import { ContactSkeleton } from './contact-skeleton';
+import { generatePageMetadata } from '@/utils/metadata';
 
-type ContactPageProps = {
+interface ContactPageProps {
   params: Promise<{ locale: string }>;
-};
+}
 
-export async function generateMetadata(
+export const generateMetadata = async (
   props: ContactPageProps
-): Promise<Metadata> {
+): Promise<Metadata> => {
   const { locale } = await props.params;
 
-  return await generatePageMetadata({
+  return generatePageMetadata({
     locale,
     namespace: 'Contact',
     path: '/contact',
   });
-}
+};
 
-export default async function ContactPage(props: ContactPageProps) {
-  const { locale } = await props.params;
-  setRequestLocale(locale);
-
+const ContactPage = (props: ContactPageProps) => {
   return (
     <section className="py-12 md:py-16">
-      <ContactSection />
+      <Suspense fallback={<ContactSkeleton />}>
+        <ContactContent params={props.params} />
+      </Suspense>
     </section>
   );
-}
+};
+
+export default ContactPage;
