@@ -2,10 +2,21 @@ packages:
   - .
 
 # Supply chain hardening
-minimumReleaseAge: 10080 # 7 days in minutes
+# minimumReleaseAge: 1440 # 1 day in minutes
+minimumReleaseAgeStrict: true
+minimumReleaseAgeIgnoreMissingTime: false
+saveExact: true
 blockExoticSubdeps: true
 strictPeerDependencies: true
 verifyDepsBeforeRun: error
+trustPolicy: no-downgrade
+
+# Checkly 8.19.0 still carries TypeScript-ESLint 8 peers capped below TypeScript 7.
+peerDependencyRules:
+  allowedVersions:
+    '@typescript-eslint/project-service@8.65.0>typescript': '7.0.2'
+    '@typescript-eslint/tsconfig-utils@8.65.0>typescript': '7.0.2'
+    '@typescript-eslint/typescript-estree@8.65.0>typescript': '7.0.2'
 
 # Postinstall script allowlist
 allowBuilds:
@@ -17,11 +28,27 @@ allowBuilds:
   msw: true
   sharp: true
 
-# Force-patch transitive deps with known CVEs whose direct parents lag.
-# Revisit on each parent-package bump and remove entries that are no longer needed.
+# Spotlight 4.11.8 calls ctx.req.query().toString(); hono 4.12.32+ returns
+# null-prototype query objects. Drop this pin once Spotlight ships a fix.
 overrides:
-  fast-uri: '>=3.1.1' # GHSA-q3j6-qgpj-74h6 path traversal
-  js-cookie: '>=3.0.6' # GHSA-qjx8-664m-686j prototype pollution (Clerk chain)
-  postcss: '>=8.5.10' # GHSA-qx2v-qp2m-jg93 XSS via </style> escaping (Next transitives)
-  brace-expansion: '>=5.0.6' # GHSA-v6h7-ph6w-fjg7 ReDoS
-  uuid: '>=11.1.1' # GHSA fix in 11.1.1 (Arcjet typeid-js chain)
+  '@napi-rs/wasm-runtime': '1.1.6'
+  fast-uri: '>=4.1.2'
+  hono: '<=4.12.31'
+  js-cookie: '>=3.0.6'
+  postcss: '>=8.5.10'
+  brace-expansion: '>=5.0.9'
+  sharp: '>=0.35.0'
+  uuid: '>=11.1.1'
+
+minimumReleaseAgeExclude:
+  - '@next/bundle-analyzer@16.3.0'
+  - '@next/env@16.3.0'
+  - '@next/swc-darwin-arm64@16.3.0'
+  - '@next/swc-darwin-x64@16.3.0'
+  - '@next/swc-linux-arm64-gnu@16.3.0'
+  - '@next/swc-linux-arm64-musl@16.3.0'
+  - '@next/swc-linux-x64-gnu@16.3.0'
+  - '@next/swc-linux-x64-musl@16.3.0'
+  - '@next/swc-win32-arm64-msvc@16.3.0'
+  - '@next/swc-win32-x64-msvc@16.3.0'
+  - next@16.3.0
