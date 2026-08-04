@@ -1,69 +1,23 @@
-# syntax=docker/dockerfile:1.7
-# =============================================================================
-# Dev Dockerfile for nextjs-webalar-starter
-# -----------------------------------------------------------------------------
-# Single-stage dev image. Designed to be orchestrated by compose.dev.yaml,
-# which bind-mounts the host source tree and overlays named volumes for
-# node_modules, .next, and the pnpm store (same hot-path strategy as the
-# devcontainer).
-#
-# Build + run:
-#   docker compose -f compose.dev.yaml up --build
-#
-# Production builds live in ./Dockerfile — do not merge concerns.
-# =============================================================================
-
 FROM node:24-bookworm-slim
-
-# Match the production hardening posture so dev parity is real.
-# Corepack pins the exact pnpm from package.json "packageManager".
 ENV PNPM_HOME=/pnpm \
     PATH=/pnpm:$PATH \
     COREPACK_ENABLE_STRICT=1 \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
-    # Pin pnpm's store dir so interactive `pnpm add` at runtime sees the
-    # same store path that `pnpm install` used during build. pnpm 11 only
-    # reads behavior config from pnpm-workspace.yaml or env vars (not .npmrc);
-    # using an env var keeps this Docker-only and doesn't break host dev.
-    # NOTE: pnpm 11 stopped reading `NPM_CONFIG_*` — must use `PNPM_CONFIG_*`.
     PNPM_CONFIG_STORE_DIR=/pnpm/store \
     NEXT_TELEMETRY_DISABLED=1 \
     DO_NOT_TRACK=1 \
     NPM_CONFIG_FUND=false \
     NPM_CONFIG_AUDIT=false \
-    # HMR file-watch over VirtioFS bind-mounts on macOS/Windows needs polling.
-    # Costs ~1-3% CPU but is the only way Turbopack/webpack see host file changes.
     WATCHPACK_POLLING=true \
     CHOKIDAR_USEPOLLING=true \
-    # next dev binds to 'localhost' by default; inside a container that's
-    # unreachable from the host port-forward. Force 0.0.0.0.
     HOSTNAME=0.0.0.0
 
-# corepack is shipped with node:24. The pinned pnpm version is downloaded
-# on first invocation (when package.json is present in the next stage).
+
 RUN corepack enable
 
 WORKDIR /app
-
-# Install deps in the image so a clean `docker compose up --build` is
-# self-sufficient. At runtime, compose mounts the named `node_modules`
-# volume over /app/node_modules — that volume gets seeded from this layer
-# on first boot and is reused on subsequent boots.
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-
-# pnpm-workspace.yaml provides all the supply-chain hardening (minimumReleaseAge,
-# blockExoticSubdeps, strictPeerDependencies, allowBuilds). Frozen lockfile
-# blocks injected deps; --prefer-offline reduces registry exposure.
-#
-# No BuildKit cache mount on this RUN — we WANT the populated store to land
-# in the image at /pnpm/store, so the `dev-pnpm-store` named volume gets
-# seeded from it on first boot. Otherwise the volume stays empty and
-# runtime `pnpm add` errors with ERR_PNPM_UNEXPECTED_STORE.
 RUN pnpm install --frozen-lockfile --prefer-offline
-
-# Source tree is provided at runtime via bind-mount from compose — do not COPY.
-
 EXPOSE 3000 8969
 
-# `pnpm dev` is `run-p dev:*` → `next dev` + `npx @spotlightjs/spotlight`.
 CMD ["pnpm", "dev"]
