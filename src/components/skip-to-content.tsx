@@ -1,8 +1,4 @@
-/**
- * Keyboard-only skip link that jumps focus to the main content area.
- * @returns A visually hidden anchor that appears on keyboard focus.
- */
-export function SkipToContent() {
+export const SkipToContent = () => {
   return (
     <a
       href="#main-content"
@@ -11,4 +7,4 @@ export function SkipToContent() {
       Skip to content
     </a>
   );
-}
+};

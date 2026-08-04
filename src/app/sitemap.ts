@@ -1,12 +1,12 @@
 import type { MetadataRoute } from 'next';
 
-import { getPathname } from '@/libs/I18nNavigation';
-import { routing } from '@/libs/I18nRouting';
-import { getBaseUrl } from '@/utils/Helpers';
+import { getPathname } from '@/libs/i18n-navigation';
+import { routing } from '@/libs/i18n-routing';
+import { getBaseUrl } from '@/utils/get-base-url';
 
 const routes = ['/', '/about', '/contact'] as const;
 
-export default function sitemap(): MetadataRoute.Sitemap {
+const sitemap = (): MetadataRoute.Sitemap => {
   const baseUrl = getBaseUrl();
 
   return routes.map((route) => ({
@@ -14,13 +14,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(),
     alternates: {
       languages: Object.fromEntries(
-        routing.locales
-          .filter((locale) => locale !== routing.defaultLocale)
-          .map((locale) => [
-            locale,
-            `${baseUrl}${getPathname({ href: route, locale })}`,
-          ])
+        routing.locales.flatMap((locale) =>
+          locale === routing.defaultLocale
+            ? []
+            : [[locale, `${baseUrl}${getPathname({ href: route, locale })}`]]
+        )
       ),
     },
   }));
-}
+};
+
+export default sitemap;

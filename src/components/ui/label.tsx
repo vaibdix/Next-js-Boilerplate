@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-function Label(props: React.ComponentProps<'label'>) {
+const Label = (props: React.ComponentProps<'label'>) => {
   return (
     <label
       {...props}
@@ -16,6 +16,6 @@ function Label(props: React.ComponentProps<'label'>) {
       )}
     />
   );
-}
+};
 
 export { Label };

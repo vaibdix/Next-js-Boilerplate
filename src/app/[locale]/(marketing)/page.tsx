@@ -3,25 +3,25 @@ import { setRequestLocale } from 'next-intl/server';
 
 import { HeroSection } from '@/components/hero';
 import { LogosSection } from '@/components/logos-section';
-import { generatePageMetadata } from '@/utils/Metadata';
+import { generatePageMetadata } from '@/utils/metadata';
 
-type IndexPageProps = {
+interface IndexPageProps {
   params: Promise<{ locale: string }>;
-};
+}
 
-export async function generateMetadata(
+export const generateMetadata = async (
   props: IndexPageProps
-): Promise<Metadata> {
+): Promise<Metadata> => {
   const { locale } = await props.params;
 
-  return await generatePageMetadata({
+  return generatePageMetadata({
     locale,
     namespace: 'Index',
     path: '/',
   });
-}
+};
 
-export default async function IndexPage(props: IndexPageProps) {
+const IndexPage = async (props: IndexPageProps) => {
   const { locale } = await props.params;
 
   setRequestLocale(locale);
@@ -32,4 +32,6 @@ export default async function IndexPage(props: IndexPageProps) {
       <LogosSection />
     </>
   );
-}
+};
+
+export default IndexPage;

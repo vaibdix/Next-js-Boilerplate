@@ -4,29 +4,18 @@ import { cacheLife } from 'next/cache';
 
 import { cn } from '@/lib/utils';
 
-/**
- * Cache the current year so reading `new Date()` doesn't break prerendering
- * under Next.js 16's Cache Components. Regenerated at most once per week,
- * which is fine for a copyright footer that only changes once a year.
- *
- * The function must be `async` because the `'use cache'` directive only
- * works on async functions, even when the body itself does no awaiting —
- * see https://nextjs.org/docs/app/api-reference/directives/use-cache.
- * @returns The current calendar year.
- */
-// oxlint-disable-next-line eslint/require-await -- 'use cache' requires async
-async function getCurrentYear() {
+const getCurrentYear = async () => {
   'use cache';
   cacheLife('weeks');
   return new Date().getFullYear();
-}
-
-type LinksGroupProps = {
-  title: string;
-  links: { title: string; href: string }[];
 };
 
-function LinksGroup({ title, links }: LinksGroupProps) {
+interface LinksGroupProps {
+  title: string;
+  links: { title: string; href: string }[];
+}
+
+const LinksGroup = ({ title, links }: LinksGroupProps) => {
   return (
     <div className="p-2">
       <h3 className="mt-2 mb-4 text-xs font-medium tracking-wider text-foreground/75 uppercase">
@@ -46,15 +35,15 @@ function LinksGroup({ title, links }: LinksGroupProps) {
       </ul>
     </div>
   );
-}
+};
 
-function SocialCard({
+const SocialCard = ({
   title,
   href,
   className,
 }: React.ComponentProps<'a'> & {
   title: string;
-}) {
+}) => {
   return (
     <a
       className={cn(
@@ -67,9 +56,9 @@ function SocialCard({
       <ArrowRightIcon className="size-4" />
     </a>
   );
-}
+};
 
-export async function Footer() {
+export const Footer = async () => {
   const t = await getTranslations('Footer');
   const year = await getCurrentYear();
 
@@ -144,4 +133,4 @@ export async function Footer() {
       </div>
     </footer>
   );
-}
+};

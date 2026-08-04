@@ -4,10 +4,10 @@ import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { cn } from '@/lib/utils';
 
-export default async function Layout(props: {
+const Layout = async (props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
-}) {
+}) => {
   const { locale } = await props.params;
   setRequestLocale(locale);
 
@@ -26,4 +26,6 @@ export default async function Layout(props: {
       <Footer />
     </div>
   );
-}
+};
+
+export default Layout;

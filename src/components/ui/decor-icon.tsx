@@ -24,10 +24,14 @@ const DecorIconVariants = cva(
   }
 );
 
-type DecorIconProps = React.ComponentProps<'svg'> &
-  VariantProps<typeof DecorIconVariants>;
+interface DecorIconProps
+  extends React.ComponentProps<'svg'>, VariantProps<typeof DecorIconVariants> {}
 
-export function DecorIcon({ position, className, ...props }: DecorIconProps) {
+export const DecorIcon = ({
+  position,
+  className,
+  ...props
+}: DecorIconProps) => {
   return (
     <svg
       aria-hidden="true"
@@ -44,4 +48,4 @@ export function DecorIcon({ position, className, ...props }: DecorIconProps) {
       <path d="M12 5v14" />
     </svg>
   );
-}
+};

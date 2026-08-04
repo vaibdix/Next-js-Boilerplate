@@ -3,16 +3,16 @@ import Image from 'next/image';
 import { DecorIcon } from '@/components/ui/decor-icon';
 import { cn } from '@/lib/utils';
 
-type Logo = {
+interface Logo {
   src: string;
   alt: string;
-};
+}
 
-type LogoCardProps = React.ComponentProps<'div'> & {
+interface LogoCardProps extends React.ComponentProps<'div'> {
   logo: Logo;
-};
+}
 
-function LogoCard({ logo, className, children, ...props }: LogoCardProps) {
+const LogoCard = ({ logo, className, children, ...props }: LogoCardProps) => {
   return (
     <div
       className={cn(
@@ -32,9 +32,9 @@ function LogoCard({ logo, className, children, ...props }: LogoCardProps) {
       {children}
     </div>
   );
-}
+};
 
-export function LogoCloud() {
+export const LogoCloud = () => {
   return (
     <div className="grid grid-cols-2 border md:grid-cols-4">
       <LogoCard
@@ -109,4 +109,4 @@ export function LogoCloud() {
       />
     </div>
   );
-}
+};

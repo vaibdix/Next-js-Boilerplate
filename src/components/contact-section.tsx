@@ -4,14 +4,14 @@ import { getTranslations } from 'next-intl/server';
 import { ContactForm } from '@/components/contact-form';
 import { cn } from '@/lib/utils';
 
-type ContactInfoProps = {
+interface ContactInfoProps {
   icon: React.ReactNode;
   label: string;
   value: string;
   className?: string;
-};
+}
 
-function ContactInfo(props: ContactInfoProps) {
+const ContactInfo = (props: ContactInfoProps) => {
   return (
     <div className={cn('flex items-center gap-3 py-3', props.className)}>
       <div className="rounded-lg border bg-card p-3 shadow-xs [&_svg]:size-5">
@@ -23,9 +23,9 @@ function ContactInfo(props: ContactInfoProps) {
       </div>
     </div>
   );
-}
+};
 
-export async function ContactSection() {
+export const ContactSection = async () => {
   const t = await getTranslations('Contact');
 
   const contactInfo = [
@@ -64,4 +64,4 @@ export async function ContactSection() {
       </div>
     </div>
   );
-}
+};

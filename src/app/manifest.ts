@@ -1,12 +1,8 @@
 import type { MetadataRoute } from 'next';
 
-import { AppConfig } from '@/utils/AppConfig';
+import { AppConfig } from '@/utils/app-config';
 
-/**
- * Generates the web app manifest for PWA and Add to Home Screen support.
- * @returns The manifest configuration.
- */
-export default function manifest(): MetadataRoute.Manifest {
+const manifest = (): MetadataRoute.Manifest => {
   return {
     name: AppConfig.name,
     short_name: AppConfig.name,
@@ -25,4 +21,6 @@ export default function manifest(): MetadataRoute.Manifest {
       },
     ],
   };
-}
+};
+
+export default manifest;

@@ -7,13 +7,12 @@ import { DecorIcon } from '@/components/ui/decor-icon';
 import { FullWidthDivider } from '@/components/ui/full-width-divider';
 import { cn } from '@/lib/utils';
 
-export async function HeroSection() {
+export const HeroSection = async () => {
   const t = await getTranslations('Hero');
 
   return (
     <section>
       <div className="relative flex flex-col items-center justify-center gap-5 px-4 py-12 md:px-4 md:py-24 lg:py-28">
-        {/* X Faded Borders & Shades */}
         <div
           aria-hidden="true"
           className="absolute inset-0 -z-1 size-full overflow-hidden"
@@ -33,7 +32,7 @@ export async function HeroSection() {
         <a
           className={cn(
             'group mx-auto flex w-fit items-center gap-3 rounded-sm border bg-card p-1 shadow',
-            'fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards transition-all delay-500 duration-500 ease-out'
+            'fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-500 duration-500 ease-out'
           )}
           href="#link"
         >
@@ -45,7 +44,7 @@ export async function HeroSection() {
           <span className="block h-5 border-l" />
 
           <div className="pr-1">
-            <ArrowRightIcon className="size-3 -translate-x-0.5 duration-150 ease-out group-hover:translate-x-0.5" />
+            <ArrowRightIcon className="size-3 -translate-x-0.5 transition-transform duration-150 ease-out group-hover:translate-x-0.5" />
           </div>
         </a>
 
@@ -67,7 +66,7 @@ export async function HeroSection() {
           {t('description')}
         </p>
 
-        <div className="flex w-fit animate-in items-center justify-center gap-3 pt-2 delay-300 duration-500 ease-out fill-mode-backwards slide-in-from-bottom-10 fade-in">
+        <div className="flex w-fit animate-in items-center justify-center gap-3 pt-2 delay-300 ease-out fill-mode-backwards slide-in-from-bottom-10 [animation-duration:500ms] fade-in">
           <Button variant="outline">
             <PhoneCallIcon data-icon="inline-start" /> {t('cta_call')}
           </Button>
@@ -107,4 +106,4 @@ export async function HeroSection() {
       </div>
     </section>
   );
-}
+};

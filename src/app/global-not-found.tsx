@@ -1,18 +1,15 @@
-// `global-not-found.tsx` bypasses every layout including `src/app/layout.tsx`,
-// so the usual global CSS import from there doesn't reach this page.
-// Per Next.js docs, import global styles + fonts directly here.
 import '@/styles/global.css';
 import { CompassIcon, HomeIcon } from 'lucide-react';
 import { Manrope } from 'next/font/google';
 import Link from 'next/link';
 
-import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { GoogleAnalytics } from '@/components/google-analytics';
 import { NotFoundPage } from '@/components/not-found';
-import { buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button-variants';
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans' });
 
-export default function GlobalNotFound() {
+const GlobalNotFound = () => {
   return (
     <html lang="en" className={`antialiased ${manrope.variable}`}>
       <body>
@@ -38,4 +35,6 @@ export default function GlobalNotFound() {
       </body>
     </html>
   );
-}
+};
+
+export default GlobalNotFound;

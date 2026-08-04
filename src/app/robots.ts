@@ -1,8 +1,8 @@
 import type { MetadataRoute } from 'next';
 
-import { getBaseUrl } from '@/utils/Helpers';
+import { getBaseUrl } from '@/utils/get-base-url';
 
-export default function robots(): MetadataRoute.Robots {
+const robots = (): MetadataRoute.Robots => {
   return {
     rules: {
       userAgent: '*',
@@ -11,4 +11,6 @@ export default function robots(): MetadataRoute.Robots {
     },
     sitemap: `${getBaseUrl()}/sitemap.xml`,
   };
-}
+};
+
+export default robots;

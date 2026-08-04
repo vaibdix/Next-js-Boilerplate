@@ -17,11 +17,11 @@ import type { LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-type Integration = {
+interface Integration {
   icon: LucideIcon;
   name: string;
   description: string;
-};
+}
 
 const data: Integration[] = [
   {
@@ -96,7 +96,7 @@ const data: Integration[] = [
   },
 ];
 
-export function Integrations() {
+export const Integrations = () => {
   return (
     <>
       <h2 className="my-5 text-xl font-medium">
@@ -138,4 +138,4 @@ export function Integrations() {
       </div>
     </>
   );
-}
+};

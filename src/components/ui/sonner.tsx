@@ -12,16 +12,15 @@ import type { ToasterProps } from 'sonner';
 
 import { useTheme } from '@/components/theme-provider';
 
-function Toaster(props: ToasterProps) {
+const Toaster = (props: ToasterProps) => {
   const { resolvedTheme } = useTheme();
 
-  // oxlint-disable-next-line typescript/no-unsafe-type-assertion -- CSS custom properties require type assertion
-  const toasterStyle = {
+  const toasterStyle: React.CSSProperties & Record<`--${string}`, string> = {
     '--normal-bg': 'var(--popover)',
     '--normal-text': 'var(--popover-foreground)',
     '--normal-border': 'var(--border)',
     '--border-radius': 'var(--radius)',
-  } as React.CSSProperties;
+  };
 
   return (
     <Sonner
@@ -43,6 +42,6 @@ function Toaster(props: ToasterProps) {
       {...props}
     />
   );
-}
+};
 
 export { Toaster };

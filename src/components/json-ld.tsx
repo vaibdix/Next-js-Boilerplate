@@ -1,14 +1,10 @@
 import Script from 'next/script';
 import type { Organization, WithContext } from 'schema-dts';
 
-import { AppConfig } from '@/utils/AppConfig';
-import { getBaseUrl } from '@/utils/Helpers';
+import { AppConfig } from '@/utils/app-config';
+import { getBaseUrl } from '@/utils/get-base-url';
 
-/**
- * Renders an Organization JSON-LD block for search engines.
- * @returns A next/script tag with the Organization schema.
- */
-export function OrganizationJsonLd() {
+export const OrganizationJsonLd = () => {
   const baseUrl = getBaseUrl();
   const data: WithContext<Organization> = {
     '@context': 'https://schema.org',
@@ -21,7 +17,10 @@ export function OrganizationJsonLd() {
 
   return (
     <Script id="organization-jsonld" type="application/ld+json">
-      {JSON.stringify(data).replaceAll('<', '\\u003c')}
+      {JSON.stringify(data)
+        .replaceAll('<', '\\u003c')
+        .replaceAll('>', '\\u003e')
+        .replaceAll('&', '\\u0026')}
     </Script>
   );
-}
+};

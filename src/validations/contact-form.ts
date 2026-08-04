@@ -7,13 +7,13 @@ export const CONTACT_FORM_FIELD_LIMITS = {
   message: 2000,
 } as const;
 
-type ContactFormValidationMessages = {
+interface ContactFormValidationMessages {
   name: string;
   email: string;
   phone: string;
   message: string;
   website: string;
-};
+}
 
 const defaultContactFormValidationMessages: ContactFormValidationMessages = {
   name: 'Enter your full name.',
@@ -23,39 +23,37 @@ const defaultContactFormValidationMessages: ContactFormValidationMessages = {
   website: 'invalid_request',
 };
 
-export function getContactFormSchema(props?: {
+export const getContactFormSchema = (props?: {
   messages?: ContactFormValidationMessages;
-}) {
+}) => {
   const messages = props?.messages ?? defaultContactFormValidationMessages;
 
-  return z
-    .object({
-      name: z
-        .string()
-        .trim()
-        .min(1, messages.name)
-        .max(CONTACT_FORM_FIELD_LIMITS.name, messages.name),
-      email: z
-        .string()
-        .trim()
-        .min(1, messages.email)
-        .max(CONTACT_FORM_FIELD_LIMITS.email, messages.email)
-        .pipe(z.email(messages.email)),
-      phone: z
-        .string()
-        .trim()
-        .min(1, messages.phone)
-        .max(CONTACT_FORM_FIELD_LIMITS.phone, messages.phone)
-        .regex(/^[+\d().\-\s]{7,}$/u, messages.phone),
-      message: z
-        .string()
-        .trim()
-        .min(10, messages.message)
-        .max(CONTACT_FORM_FIELD_LIMITS.message, messages.message),
-      website: z.string().trim().max(0, messages.website).default(''),
-    })
-    .strict();
-}
+  return z.strictObject({
+    name: z
+      .string()
+      .trim()
+      .min(1, messages.name)
+      .max(CONTACT_FORM_FIELD_LIMITS.name, messages.name),
+    email: z
+      .string()
+      .trim()
+      .min(1, messages.email)
+      .max(CONTACT_FORM_FIELD_LIMITS.email, messages.email)
+      .pipe(z.email(messages.email)),
+    phone: z
+      .string()
+      .trim()
+      .min(1, messages.phone)
+      .max(CONTACT_FORM_FIELD_LIMITS.phone, messages.phone)
+      .regex(/^[+\d().\-\s]{7,}$/u, messages.phone),
+    message: z
+      .string()
+      .trim()
+      .min(10, messages.message)
+      .max(CONTACT_FORM_FIELD_LIMITS.message, messages.message),
+    website: z.string().trim().max(0, messages.website).default(''),
+  });
+};
 
 export const contactFormSchema = getContactFormSchema();
 
@@ -85,6 +83,6 @@ export const contactFormResponseSchema = z.discriminatedUnion('ok', [
 
 export type ContactFormResponse = z.infer<typeof contactFormResponseSchema>;
 
-export function parseContactFormJsonResponse(value: unknown) {
+export const parseContactFormJsonResponse = (value: unknown) => {
   return contactFormResponseSchema.safeParse(value);
-}
+};

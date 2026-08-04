@@ -3,12 +3,18 @@ import { createPortal } from 'react-dom';
 
 import { cn } from '@/lib/utils';
 
-function Portal({ className, ...props }: React.ComponentProps<'div'>) {
-  const [mounted, setMounted] = React.useState(false);
+const subscribeToHydration = () => {
+  return () => {};
+};
+
+const Portal = ({ className, ...props }: React.ComponentProps<'div'>) => {
+  const mounted = React.useSyncExternalStore(
+    subscribeToHydration,
+    () => true,
+    () => false
+  );
 
   React.useEffect(() => {
-    setMounted(true);
-
     const originalStyle = window.getComputedStyle(document.body).overflow;
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth;
@@ -36,9 +42,12 @@ function Portal({ className, ...props }: React.ComponentProps<'div'>) {
     />,
     document.body
   );
-}
+};
 
-function PortalBackdrop({ className, ...props }: React.ComponentProps<'div'>) {
+const PortalBackdrop = ({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) => {
   return (
     <div
       className={cn(
@@ -48,6 +57,6 @@ function PortalBackdrop({ className, ...props }: React.ComponentProps<'div'>) {
       {...props}
     />
   );
-}
+};
 
 export { Portal, PortalBackdrop };

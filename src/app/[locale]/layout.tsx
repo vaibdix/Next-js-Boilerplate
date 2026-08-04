@@ -5,7 +5,7 @@ import { Manrope } from 'next/font/google';
 import { notFound } from 'next/navigation';
 
 import { AnnouncerProvider } from '@/components/announcer';
-import { GoogleAnalytics } from '@/components/GoogleAnalytics';
+import { GoogleAnalytics } from '@/components/google-analytics';
 import { OrganizationJsonLd } from '@/components/json-ld';
 import { QueryProvider } from '@/components/query-provider';
 import { SkipToContent } from '@/components/skip-to-content';
@@ -15,8 +15,8 @@ import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { WebVitals } from '@/components/web-vitals';
 import { cn } from '@/lib/utils';
-import { routing } from '@/libs/I18nRouting';
-import { getBaseUrl } from '@/utils/Helpers';
+import { routing } from '@/libs/i18n-routing';
+import { getBaseUrl } from '@/utils/get-base-url';
 
 export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
@@ -66,14 +66,14 @@ export const viewport: Viewport = {
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans' });
 
-export function generateStaticParams() {
+export const generateStaticParams = () => {
   return routing.locales.map((locale) => ({ locale }));
-}
+};
 
-export default async function RootLayout(props: {
+const RootLayout = async (props: {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
-}) {
+}) => {
   const { locale } = await props.params;
 
   if (!hasLocale(routing.locales, locale)) {
@@ -117,4 +117,6 @@ export default async function RootLayout(props: {
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

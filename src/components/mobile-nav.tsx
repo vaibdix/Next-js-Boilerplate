@@ -2,14 +2,14 @@ import { XIcon, MenuIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 
-import { LocaleSwitcher } from '@/components/LocaleSwitcher';
+import { LocaleSwitcher } from '@/components/locale-switcher';
 import { navLinks } from '@/components/nav-links';
 import { Button } from '@/components/ui/button';
 import { Portal, PortalBackdrop } from '@/components/ui/portal';
 import { cn } from '@/lib/utils';
-import { Link } from '@/libs/I18nNavigation';
+import { Link } from '@/libs/i18n-navigation';
 
-export function MobileNav() {
+export const MobileNav = () => {
   const [open, setOpen] = React.useState(false);
   const t = useTranslations('Navigation');
 
@@ -80,4 +80,4 @@ export function MobileNav() {
       )}
     </div>
   );
-}
+};

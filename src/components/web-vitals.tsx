@@ -2,15 +2,17 @@
 
 import { useReportWebVitals } from 'next/web-vitals';
 
-import { trackEvent } from '@/libs/Analytics';
+import { trackEvent } from '@/libs/analytics';
 
-/**
- * Reports Core Web Vitals (LCP, FID, CLS, FCP, TTFB) to Google Analytics.
- * @returns null — renders nothing.
- */
-export function WebVitals() {
-  /* oxlint-disable typescript/no-unsafe-assignment, typescript/no-unsafe-argument -- metric type from next/dist/compiled/web-vitals lacks .d.ts declarations */
-  useReportWebVitals((metric) => {
+interface WebVitalMetric {
+  delta: number;
+  id: string;
+  name: string;
+  rating: string;
+}
+
+export const WebVitals = () => {
+  useReportWebVitals((metric: WebVitalMetric) => {
     const { name, delta, id, rating } = metric;
 
     trackEvent(name, {
@@ -20,6 +22,5 @@ export function WebVitals() {
       non_interaction: true,
     });
   });
-  /* oxlint-enable typescript/no-unsafe-assignment, typescript/no-unsafe-argument */
   return null;
-}
+};

@@ -1,17 +1,12 @@
 import { ImageResponse } from 'next/og';
 
-import { AppConfig } from '@/utils/AppConfig';
+import { AppConfig } from '@/utils/app-config';
 
-export const runtime = 'edge';
 export const alt = AppConfig.name;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-/**
- * Generates a dynamic Open Graph image for social media previews.
- * @returns An image response with the app branding.
- */
-export default function Image() {
+const Image = () => {
   return new ImageResponse(
     <div
       style={{
@@ -33,4 +28,6 @@ export default function Image() {
     </div>,
     { ...size }
   );
-}
+};
+
+export default Image;

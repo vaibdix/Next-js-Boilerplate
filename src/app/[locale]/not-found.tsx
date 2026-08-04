@@ -2,10 +2,10 @@ import { CompassIcon, HomeIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { NotFoundPage } from '@/components/not-found';
-import { buttonVariants } from '@/components/ui/button';
-import { Link } from '@/libs/I18nNavigation';
+import { buttonVariants } from '@/components/ui/button-variants';
+import { Link } from '@/libs/i18n-navigation';
 
-export default function NotFound() {
+const NotFound = () => {
   const t = useTranslations('NotFound');
 
   return (
@@ -25,4 +25,6 @@ export default function NotFound() {
       }
     />
   );
-}
+};
+
+export default NotFound;

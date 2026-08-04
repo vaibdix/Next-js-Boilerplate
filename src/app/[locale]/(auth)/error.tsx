@@ -1,44 +1,19 @@
 'use client';
 
 import * as Sentry from '@sentry/nextjs';
-import { useTranslations } from 'next-intl';
 import { useEffect } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { ErrorState } from '@/components/error-state';
 
-/**
- * Error boundary for authenticated routes (dashboard, user profile).
- * @param props - Error and `unstable_retry` callback from Next.js 16.2+.
- * @returns A friendly error UI with a retry button that re-fetches the segment.
- */
-export default function AuthError(props: {
+const AuthError = (props: {
   error: Error & { digest?: string };
   unstable_retry: () => void;
-}) {
-  const t = useTranslations('Error');
-
+}) => {
   useEffect(() => {
     Sentry.captureException(props.error);
   }, [props.error]);
 
-  return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 px-4 text-center">
-      <h1 className="text-2xl font-bold">{t('heading')}</h1>
-      <p className="max-w-md text-sm text-muted-foreground">
-        {t('description')}
-      </p>
-      {props.error.digest !== undefined && (
-        <p className="text-xs text-muted-foreground">
-          {t('error_id', { id: props.error.digest })}
-        </p>
-      )}
-      <Button
-        onClick={() => {
-          props.unstable_retry();
-        }}
-      >
-        {t('retry')}
-      </Button>
-    </div>
-  );
-}
+  return <ErrorState {...props} />;
+};
+
+export default AuthError;

@@ -2,28 +2,30 @@ import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 
 import { Integrations } from '@/components/integrations';
-import { generatePageMetadata } from '@/utils/Metadata';
+import { generatePageMetadata } from '@/utils/metadata';
 
-type AboutPageProps = {
+interface AboutPageProps {
   params: Promise<{ locale: string }>;
-};
+}
 
-export async function generateMetadata(
+export const generateMetadata = async (
   props: AboutPageProps
-): Promise<Metadata> {
+): Promise<Metadata> => {
   const { locale } = await props.params;
 
-  return await generatePageMetadata({
+  return generatePageMetadata({
     locale,
     namespace: 'About',
     path: '/about',
   });
-}
+};
 
-export default async function About(props: AboutPageProps) {
+const About = async (props: AboutPageProps) => {
   const { locale } = await props.params;
 
   setRequestLocale(locale);
 
   return <Integrations />;
-}
+};
+
+export default About;

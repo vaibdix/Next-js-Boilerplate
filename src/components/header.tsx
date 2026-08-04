@@ -3,7 +3,7 @@
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-import { LocaleSwitcher } from '@/components/LocaleSwitcher';
+import { LocaleSwitcher } from '@/components/locale-switcher';
 import { Logo } from '@/components/logo';
 import { MobileNav } from '@/components/mobile-nav';
 import { navLinks } from '@/components/nav-links';
@@ -11,9 +11,9 @@ import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 import { useScroll } from '@/hooks/use-scroll';
 import { cn } from '@/lib/utils';
-import { Link } from '@/libs/I18nNavigation';
+import { Link } from '@/libs/i18n-navigation';
 
-function ThemeToggle() {
+const ThemeToggle = () => {
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
@@ -29,16 +29,16 @@ function ThemeToggle() {
       <MoonIcon className="absolute size-4 scale-0 dark:scale-100" />
     </Button>
   );
-}
+};
 
-export function Header() {
+export const Header = () => {
   const scrolled = useScroll(10);
   const t = useTranslations('Navigation');
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 mx-auto w-full max-w-7xl border-transparent border-b md:rounded-md md:border md:transition-all md:ease-out',
+        'sticky top-0 z-50 mx-auto w-full max-w-7xl border-transparent border-b md:rounded-md md:border md:transition-[top,max-width,background-color,border-color,box-shadow] md:ease-out',
         {
           'border-border bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/50 md:top-2 md:max-w-5xl md:shadow':
             scrolled,
@@ -47,7 +47,7 @@ export function Header() {
     >
       <nav
         className={cn(
-          'flex h-14 w-full items-center justify-between px-4 md:h-12 md:transition-all md:ease-out',
+          'flex h-14 w-full items-center justify-between px-4 md:h-12 md:transition-[height,padding] md:ease-out',
           {
             'md:px-2': scrolled,
           }
@@ -96,4 +96,4 @@ export function Header() {
       </nav>
     </header>
   );
-}
+};

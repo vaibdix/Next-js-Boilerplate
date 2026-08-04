@@ -37,7 +37,7 @@ const defaultContactFormValues: ContactFormInput = {
 
 type SubmitState = 'idle' | 'success' | 'error';
 
-async function getResponseJson(response: Response) {
+const getResponseJson = async (response: Response) => {
   try {
     const value: unknown = await response.json();
 
@@ -45,9 +45,32 @@ async function getResponseJson(response: Response) {
   } catch {
     return null;
   }
-}
+};
 
-export function ContactForm() {
+const submitContactForm = async (values: ContactFormValues) => {
+  const response = await fetch('/api/contact', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(values),
+  }).catch(() => null);
+
+  if (response === null) {
+    return false;
+  }
+
+  const responseJson = await getResponseJson(response);
+  const parsedResponse = parseContactFormJsonResponse(responseJson);
+
+  if (!parsedResponse.success) {
+    return false;
+  }
+
+  return response.ok && parsedResponse.data.ok;
+};
+
+export const ContactForm = () => {
   const t = useTranslations('Contact');
   const announce = useAnnounce();
   const [submitState, setSubmitState] = React.useState<SubmitState>('idle');
@@ -67,28 +90,10 @@ export function ContactForm() {
     resolver: zodResolver(contactFormSchema),
   });
 
-  async function handleSubmit(values: ContactFormValues) {
+  const handleSubmit = async (values: ContactFormValues) => {
     setSubmitState('idle');
 
-    const response = await fetch('/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-    }).catch(() => null);
-
-    if (response === null) {
-      setSubmitState('error');
-      toast.error(t('form_submit_error'));
-      announce(t('form_submit_error'));
-      return;
-    }
-
-    const responseJson = await getResponseJson(response);
-    const parsedResponse = parseContactFormJsonResponse(responseJson);
-
-    if (!response.ok || !parsedResponse.success || !parsedResponse.data.ok) {
+    if (!(await submitContactForm(values))) {
       setSubmitState('error');
       toast.error(t('form_submit_error'));
       announce(t('form_submit_error'));
@@ -99,7 +104,7 @@ export function ContactForm() {
     setSubmitState('success');
     toast.success(t('form_success'));
     announce(t('form_success'));
-  }
+  };
 
   return (
     <form
@@ -200,4 +205,4 @@ export function ContactForm() {
       </Button>
     </form>
   );
-}
+};
