@@ -27,11 +27,6 @@
       "sourceType": "github",
       "computedHash": "2bc6cf38ec7b4a5778a43fabb3e87642c9897ad45e9eb42438b57fd2def6cca8"
     },
-    "ultracite": {
-      "source": "haydenbleasel/ultracite",
-      "sourceType": "github",
-      "computedHash": "74f0784eb45e1246471f31331f36b76eb45525f16604dfd8fbdf4c34f731ee67"
-    },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "sourceType": "github",
