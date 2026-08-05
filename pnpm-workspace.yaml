@@ -2,7 +2,7 @@ packages:
   - .
 
 # Supply chain hardening
-minimumReleaseAge: 1440 # 1 day in minutes
+minimumReleaseAge: 2880 # 2 days in minutes
 minimumReleaseAgeStrict: true
 minimumReleaseAgeIgnoreMissingTime: false
 saveExact: true
