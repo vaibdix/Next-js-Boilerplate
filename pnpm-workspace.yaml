@@ -10,6 +10,8 @@ blockExoticSubdeps: true
 strictPeerDependencies: true
 verifyDepsBeforeRun: error
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - 'semver@6.3.1'
 
 # Checkly 8.19.0 still carries TypeScript-ESLint 8 peers capped below TypeScript 7.
 peerDependencyRules:

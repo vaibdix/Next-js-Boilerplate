@@ -41,6 +41,9 @@ yarn-error.log*
 # Sentry Config File
 .env.sentry-build-plugin
 
+# local-only CI harness, run with nektos/act — never pushed
+.github/workflows/
+
 # local folder
 local
 
