@@ -10,7 +10,6 @@ import { OrganizationJsonLd } from '@/components/json-ld';
 import { QueryProvider } from '@/components/query-provider';
 import { SkipToContent } from '@/components/skip-to-content';
 import { ThemeProvider } from '@/components/theme-provider';
-import { ThemeScript } from '@/components/theme-script';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { WebVitals } from '@/components/web-vitals';
@@ -97,7 +96,6 @@ const RootLayout = async (props: {
         <link rel="dns-prefetch" href="https://storage.efferd.com" />
         <OrganizationJsonLd />
         <GoogleAnalytics />
-        <ThemeScript />
       </head>
       <body>
         <SkipToContent />

@@ -14,6 +14,8 @@ import { useTheme } from '@/components/theme-provider';
 
 const Toaster = (props: ToasterProps) => {
   const { resolvedTheme } = useTheme();
+  const toasterTheme: ToasterProps['theme'] =
+    resolvedTheme === 'dark' ? 'dark' : 'light';
 
   const toasterStyle: React.CSSProperties & Record<`--${string}`, string> = {
     '--normal-bg': 'var(--popover)',
@@ -24,7 +26,7 @@ const Toaster = (props: ToasterProps) => {
 
   return (
     <Sonner
-      theme={resolvedTheme}
+      theme={toasterTheme}
       className="toaster group"
       icons={{
         success: <CircleCheckIcon className="size-4" />,
