@@ -9,6 +9,7 @@ const baseConfig: NextConfig = {
   output: 'standalone',
   cacheComponents: true,
   partialPrefetching: true,
+  agentRules: false,
   experimental: {
     globalNotFound: true,
     useTypeScriptCli: true,

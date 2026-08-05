@@ -29,4 +29,8 @@ export const register = () => {
   }
 };
 
-export const onRequestError = Sentry.captureRequestError;
+const noopRequestError: typeof Sentry.captureRequestError = () => {};
+
+export const onRequestError = isSentryEnabled()
+  ? Sentry.captureRequestError
+  : noopRequestError;

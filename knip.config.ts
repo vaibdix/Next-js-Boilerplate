@@ -13,8 +13,6 @@ const config: KnipConfig = {
 
   ignoreDependencies: [
     '@swc/helpers',
-    'checkly',
-    'react-day-picker',
     'semantic-release',
     '@secretlint/secretlint-rule-preset-recommend',
   ],
