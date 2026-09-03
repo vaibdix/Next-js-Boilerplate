@@ -1,7 +1,7 @@
 import { SignOutButton } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 import { LogOutIcon } from 'lucide-react';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import { LocaleSwitcher } from '@/components/locale-switcher';
@@ -16,7 +16,6 @@ interface DashboardLayoutProps {
 const DashboardContent = async (props: DashboardLayoutProps) => {
   await auth.protect();
   const { locale } = await props.params;
-  setRequestLocale(locale);
   const t = await getTranslations({
     locale,
     namespace: 'DashboardLayout',
@@ -30,6 +29,7 @@ const DashboardContent = async (props: DashboardLayoutProps) => {
             <li>
               <Link
                 href="/dashboard"
+                prefetch
                 className="font-medium text-foreground hover:text-foreground/80"
               >
                 {t('dashboard_link')}
@@ -38,6 +38,7 @@ const DashboardContent = async (props: DashboardLayoutProps) => {
             <li>
               <Link
                 href="/dashboard/user-profile"
+                prefetch
                 className="text-muted-foreground hover:text-foreground"
               >
                 {t('user_profile_link')}

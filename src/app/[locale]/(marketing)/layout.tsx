@@ -1,16 +1,8 @@
-import { setRequestLocale } from 'next-intl/server';
-
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { cn } from '@/lib/utils';
 
-const Layout = async (props: {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}) => {
-  const { locale } = await props.params;
-  setRequestLocale(locale);
-
+const Layout = (props: { children: React.ReactNode }) => {
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden px-4 supports-[overflow:clip]:overflow-clip">
       <Header />

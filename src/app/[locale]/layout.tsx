@@ -1,6 +1,6 @@
+import '@/styles/global.css';
 import type { Metadata, Viewport } from 'next';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
 import { Manrope } from 'next/font/google';
 import { notFound } from 'next/navigation';
 
@@ -78,8 +78,6 @@ const RootLayout = async (props: {
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
-
-  setRequestLocale(locale);
 
   return (
     <html

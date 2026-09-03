@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 
+import { HelloSkeleton } from './hello-skeleton';
 import { Hello } from '@/components/hello';
 
 interface DashboardPageProps {
@@ -23,13 +25,12 @@ export const generateMetadata = async (
   };
 };
 
-const DashboardPage = async (props: DashboardPageProps) => {
-  const { locale } = await props.params;
-  setRequestLocale(locale);
-
+const DashboardPage = () => {
   return (
     <div className="py-5 [&_p]:my-6">
-      <Hello />
+      <Suspense fallback={<HelloSkeleton />}>
+        <Hello />
+      </Suspense>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 
 import { ContactContent } from './contact-content';
 import { ContactSkeleton } from './contact-skeleton';
+import { Crossfade } from '@/components/crossfade';
 import { generatePageMetadata } from '@/utils/metadata';
 
 interface ContactPageProps {
@@ -21,11 +22,13 @@ export const generateMetadata = async (
   });
 };
 
-const ContactPage = (props: ContactPageProps) => {
+const ContactPage = () => {
   return (
     <section className="py-12 md:py-16">
       <Suspense fallback={<ContactSkeleton />}>
-        <ContactContent params={props.params} />
+        <Crossfade>
+          <ContactContent />
+        </Crossfade>
       </Suspense>
     </section>
   );

@@ -48,7 +48,7 @@ export const MobileNav = () => {
                   className="justify-start"
                   key={link.key}
                   variant="ghost"
-                  render={<Link href={link.href} />}
+                  render={<Link href={link.href} prefetch />}
                   nativeButton={false}
                 >
                   {t(link.key)}
@@ -59,14 +59,14 @@ export const MobileNav = () => {
               <Button
                 className="w-full"
                 variant="outline"
-                render={<Link href="/sign-in" />}
+                render={<Link href="/sign-in" prefetch />}
                 nativeButton={false}
               >
                 {t('sign_in')}
               </Button>
               <Button
                 className="w-full"
-                render={<Link href="/sign-up" />}
+                render={<Link href="/sign-up" prefetch />}
                 nativeButton={false}
               >
                 {t('get_started')}

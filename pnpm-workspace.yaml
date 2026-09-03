@@ -31,29 +31,6 @@ allowBuilds:
   sharp: true
 
 # Spotlight 4.11.8 calls ctx.req.query().toString(); hono 4.12.32+ returns
-# null-prototype query objects. Drop this pin once Spotlight ships a fix.
+# null-prototype query objects. Exact pin: latest hono that supports Spotlight.
 overrides:
-  '@napi-rs/wasm-runtime': '1.1.6'
-# fast-uri is capped below 4.1.4 until that release clears the 2-day quarantine.
-# nanoid floor covers GHSA-2v37-7h3g-55p8 via postcss.
-  fast-uri: '>=4.1.3 <4.1.4'
-  hono: '<=4.12.31'
-  js-cookie: '>=3.0.6'
-  nanoid: '>=3.3.18 <4'
-  postcss: '>=8.5.10'
-  brace-expansion: '>=5.0.9'
-  sharp: '>=0.35.0'
-  uuid: '>=11.1.1'
-
-minimumReleaseAgeExclude:
-  - '@next/bundle-analyzer@16.3.0'
-  - '@next/env@16.3.0'
-  - '@next/swc-darwin-arm64@16.3.0'
-  - '@next/swc-darwin-x64@16.3.0'
-  - '@next/swc-linux-arm64-gnu@16.3.0'
-  - '@next/swc-linux-arm64-musl@16.3.0'
-  - '@next/swc-linux-x64-gnu@16.3.0'
-  - '@next/swc-linux-x64-musl@16.3.0'
-  - '@next/swc-win32-arm64-msvc@16.3.0'
-  - '@next/swc-win32-x64-msvc@16.3.0'
-  - next@16.3.0
+  hono: '4.12.31'

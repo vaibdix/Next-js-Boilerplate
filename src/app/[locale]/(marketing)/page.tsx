@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
 
+import { HeroSkeleton } from './hero-skeleton';
+import { LogosSkeleton } from './logos-skeleton';
+import { Crossfade } from '@/components/crossfade';
 import { HeroSection } from '@/components/hero';
 import { LogosSection } from '@/components/logos-section';
 import { generatePageMetadata } from '@/utils/metadata';
@@ -21,15 +24,19 @@ export const generateMetadata = async (
   });
 };
 
-const IndexPage = async (props: IndexPageProps) => {
-  const { locale } = await props.params;
-
-  setRequestLocale(locale);
-
+const IndexPage = () => {
   return (
     <>
-      <HeroSection />
-      <LogosSection />
+      <Suspense fallback={<HeroSkeleton />}>
+        <Crossfade>
+          <HeroSection />
+        </Crossfade>
+      </Suspense>
+      <Suspense fallback={<LogosSkeleton />}>
+        <Crossfade>
+          <LogosSection />
+        </Crossfade>
+      </Suspense>
     </>
   );
 };

@@ -97,7 +97,7 @@ Tailwind v4 utility classes. Base UI primitives (not Radix) for interactive comp
 ## Pages
 
 - Default export name ends with `Page`. Props alias (if reused) ends with `PageProps`.
-- Locale pages: `props: { params: Promise<{ locale: string }> }` → `const { locale } = await props.params` → `setRequestLocale(locale)`.
+- Locale pages: read the locale via `getLocale()` from `next-intl/server` (resolved from `next/root-params` in `src/libs/i18n.ts`). Keep `props.params` only when the locale drives other logic (localized URLs, metadata overrides).
 - Escape glob chars in shell commands for Next.js paths.
 - Dashboard pages (sit behind auth); define meta once in layout, not in each page.
 

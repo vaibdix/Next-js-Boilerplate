@@ -37,6 +37,7 @@ export default defineConfig({
     'no-magic-numbers': 'off',
     'no-ternary': 'off',
     'no-shadow': 'off', // Nested component slots conventionally reuse prop names
+    'one-var': 'off', // One declaration per const; exports cannot be combined anyway
     'no-warning-comments': 'off', // Allow TODO and FIXME comments
     'prefer-named-capture-group': 'off', // Short validation regexes do not consume captures by name
     'prefer-destructuring': 'off', // React components intentionally access props through one object
@@ -62,6 +63,7 @@ export default defineConfig({
     'node/no-sync': 'off', // One-shot build and codemod scripts use synchronous filesystem APIs
 
     'react/function-component-definition': 'off', // The repository enforces arrow components
+    'react/capitalized-calls': 'off', // Variant builders intentionally use PascalCase names
     'react/jsx-max-depth': 'off',
     'react/jsx-props-no-spreading': 'off', // Primitive wrappers must forward library and DOM props
     'react/hook-use-state': 'off', // Providers may intentionally retain only a lazily initialized value

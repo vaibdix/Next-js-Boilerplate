@@ -1,12 +1,4 @@
-import { setRequestLocale } from 'next-intl/server';
-
-const CenteredLayout = async (props: {
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}) => {
-  const { locale } = await props.params;
-  setRequestLocale(locale);
-
+const CenteredLayout = (props: { children: React.ReactNode }) => {
   return (
     <div className="flex min-h-screen items-center justify-center">
       {props.children}

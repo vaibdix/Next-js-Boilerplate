@@ -1,3 +1,4 @@
+import { instant } from '@next/playwright';
 import { expect, test } from '@playwright/test';
 
 const PUBLIC_ROUTES = [
@@ -49,6 +50,18 @@ test.describe('route behaviour', () => {
   });
 });
 
+test.describe('instant navigation', () => {
+  test('home to about renders from the prefetched shell', async ({ page }) => {
+    await page.goto('/');
+
+    await instant(page, async () => {
+      await page.getByRole('button', { name: 'About' }).first().click();
+      await page.waitForURL('/about');
+      await expect(page.locator('main#main-content')).toBeVisible();
+    });
+  });
+});
+
 test.describe('authenticated routes', () => {
   test.skip(
     !isClerkConfigured,
@@ -78,22 +91,13 @@ test.describe('authenticated routes', () => {
   });
 });
 
-// The marketing layout still reads `params` outside Suspense, which `next dev`
-// echoes into the browser console as an Instant Insight. It does not appear in a
-// production build. Drop that one diagnostic so this spec keeps failing on
-// everything else; delete the filter once the layout is fixed.
-const KNOWN_DEV_INSIGHT = 'nextjs.org/docs/messages/instant-shell-url-data';
-
 test.describe('console health', () => {
   for (const route of ['/', '/about', '/contact']) {
     test(`${route} logs no console errors`, async ({ page }) => {
       const consoleErrors: string[] = [];
 
       page.on('console', (message) => {
-        if (
-          message.type() === 'error' &&
-          !message.text().includes(KNOWN_DEV_INSIGHT)
-        ) {
+        if (message.type() === 'error') {
           consoleErrors.push(message.text());
         }
       });

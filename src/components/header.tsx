@@ -67,7 +67,7 @@ export const Header = () => {
                 key={link.key}
                 size="sm"
                 variant="ghost"
-                render={<Link href={link.href} />}
+                render={<Link href={link.href} prefetch />}
                 nativeButton={false}
               >
                 {t(link.key)}
@@ -77,14 +77,14 @@ export const Header = () => {
           <Button
             size="sm"
             variant="outline"
-            render={<Link href="/sign-in" />}
+            render={<Link href="/sign-in" prefetch />}
             nativeButton={false}
           >
             {t('sign_in')}
           </Button>
           <Button
             size="sm"
-            render={<Link href="/sign-up" />}
+            render={<Link href="/sign-up" prefetch />}
             nativeButton={false}
           >
             {t('get_started')}

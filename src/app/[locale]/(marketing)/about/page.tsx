@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
 
 import { Integrations } from '@/components/integrations';
 import { generatePageMetadata } from '@/utils/metadata';
@@ -20,11 +19,7 @@ export const generateMetadata = async (
   });
 };
 
-const About = async (props: AboutPageProps) => {
-  const { locale } = await props.params;
-
-  setRequestLocale(locale);
-
+const About = () => {
   return <Integrations />;
 };
 

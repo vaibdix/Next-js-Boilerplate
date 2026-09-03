@@ -1,6 +1,5 @@
 import { SignUp } from '@clerk/nextjs';
 import type { Metadata } from 'next';
-import { setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import { getI18nPath } from '@/utils/get-i18n-path';
@@ -24,7 +23,6 @@ export const generateMetadata = async (
 
 const SignUpPage = async (props: SignUpPageProps) => {
   const { locale } = await props.params;
-  setRequestLocale(locale);
 
   return (
     <Suspense fallback={null}>

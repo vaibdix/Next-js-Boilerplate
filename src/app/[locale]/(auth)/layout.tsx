@@ -1,5 +1,4 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import { setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import { routing } from '@/libs/i18n-routing';
@@ -12,7 +11,6 @@ interface AuthLayoutProps {
 
 const AuthContent = async (props: AuthLayoutProps) => {
   const { locale } = await props.params;
-  setRequestLocale(locale);
 
   const clerkLocale =
     ClerkLocalizations.supportedLocales[locale] ??

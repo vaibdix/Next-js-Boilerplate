@@ -1,6 +1,6 @@
 import { UserProfile } from '@clerk/nextjs';
 import type { Metadata } from 'next';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import { getI18nPath } from '@/utils/get-i18n-path';
@@ -27,7 +27,6 @@ export const generateMetadata = async (
 
 const UserProfilePage = async (props: UserProfilePageProps) => {
   const { locale } = await props.params;
-  setRequestLocale(locale);
 
   return (
     <div className="my-6 lg:-ml-12">
