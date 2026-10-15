@@ -11,6 +11,7 @@ const baseConfig: NextConfig = {
   partialPrefetching: true,
   agentRules: false,
   experimental: {
+    turbopackGc: true,
     globalNotFound: true,
     useTypeScriptCli: true,
   },
@@ -53,7 +54,7 @@ const baseConfig: NextConfig = {
       },
     ];
   },
-  reactCompiler: true,
+  reactCompiler: false,
   outputFileTracingIncludes: {
     '/': ['./migrations/**/*'],
   },
